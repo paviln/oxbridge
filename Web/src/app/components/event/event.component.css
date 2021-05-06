@@ -1,0 +1,36 @@
+#image{
+    height: 25vh;
+    min-height: 100px;
+    background-image: url("src/assets/images/about.jpg");
+    background-size: cover;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+}
+
+#eventIcon {
+    width: 80px;
+    height: 100px;
+}
+
+.eventList{
+    height: 90vh;
+}
+
+#date{
+    line-height: 0.5;
+    color: #69b8d4;
+}
+
+#rightMenu{
+    background-color: #dfe7e7;
+}
+
+#map {
+    height: 58vh;
+    width: 100%;
+}
+
+#participantsTable {
+    background-color: #EEF7FA;
+    border-radius: 10px;
+}

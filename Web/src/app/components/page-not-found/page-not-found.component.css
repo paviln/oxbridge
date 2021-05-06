@@ -1,0 +1,40 @@
+body {
+    background-color: #95c2de;
+    min-height: 95vh;
+  }
+  
+  .mainbox {
+    background-color: #95c2de;
+    margin: auto;
+    height: 600px;
+    width: 600px;
+    position: relative;
+  }
+  
+    .err {
+      color: #ffffff;
+      font-family: 'Nunito Sans', sans-serif;
+      font-size: 11rem;
+      position:absolute;
+      left: 27%;
+      top: 25%;
+    }
+  
+  .msg {
+      text-align: center;
+      font-family: 'Nunito Sans', sans-serif;
+      font-size: 1.6rem;
+      position:absolute;
+      left: 16%;
+      top: 65%;
+      width: 75%;
+    }
+  
+  a {
+    text-decoration: none;
+    color: white;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }

@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:PopupPage   
+             xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+             xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="Oxbridge.App.Views.Popups.LoadingPopupView"
+             CloseWhenBackgroundIsClicked="False">
+    <pages:PopupPage.Animation>
+        <animations:ScaleAnimation 
+            DurationIn="1"
+            DurationOut="1"
+            EasingIn="SinOut"
+            EasingOut="SinIn"
+            HasBackgroundAnimation="True"
+            PositionIn="Center"
+            PositionOut="Center"
+            ScaleIn="1.2"
+            ScaleOut="0.8"
+            />
+    </pages:PopupPage.Animation>
+
+    <Frame BackgroundColor="Transparent" CornerRadius="10" HasShadow="True" Margin="20,10,20,10" VerticalOptions="Center" HorizontalOptions="Center">
+        <StackLayout>
+            <ActivityIndicator IsRunning="True" ></ActivityIndicator>
+        </StackLayout>
+    </Frame>
+</pages:PopupPage>

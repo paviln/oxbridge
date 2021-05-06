@@ -1,0 +1,83 @@
+<div id="image">
+    <div class="container h-100">
+        <div class="row h-100 align-items-end pb-4">
+            <div class="image-text col-lg text-start">
+                <h1 class="font-weight-normal text-white">Event</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-2"></div>
+    <section class="eventList pt-4 col-lg-6">
+
+        <!-- Event information -->
+        <div class="container" *ngIf="event | async as event">
+            <div class="event row p-1 pb-3">
+                <div class="pt-2">
+                    <img id="eventIcon" src="../../../assets/images/pin.png">
+                </div>
+                <div class="col-sm">
+                    <h1 class="font-weight-light">{{event.name}}</h1>
+                    <div id="date" class="row pl-3">
+                        <label class="h5 font-weight-normal">{{event.eventStart | date:'d. MMM yyyy'}} - {{event.eventEnd | date:'d. MMM yyyy'}}</label>
+                    </div>
+                    <div class="row pl-3">
+                        <label class="h6 font-weight-normal">{{event.eventStart | date:'HH:mm'}} - {{event.eventEnd | date:'HH:mm'}}</label>
+                    </div>
+                    <div id="city" class="row pl-3">
+                        <label class="font-weight-bold">{{event.city}}</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scoreboard -->
+        <div id="scoreboard" class="container pt-4" *ngIf='raceIsOver'>
+            <h4>Scoreboard</h4>
+            <table class="table">
+                <tr>
+                    <th>Placering</th>
+                    <th>Ejer/Kaptajn</th>
+                    <th>Skibsnavn</th>
+                    <th>Team navn</th>
+                </tr>
+                <tr *ngFor='let score of scoreboard | async'>
+                    <td>{{score.placement}}</td>
+                    <td>{{score.owner}}</td>
+                    <td>{{score.shipName}}</td>
+                    <td>{{score.teamName}}</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- List of participants -->
+        <div class="container pt-4" *ngIf='!raceIsOver'>
+            <h4>Deltagere</h4>
+            <table id="participantsTable" class="table">
+                <tr>
+                    <th>Ejer/Kaptajn</th>
+                    <th>Båd</th>
+                    <th>Team navn</th>
+                </tr>
+                <tr *ngFor='let participant of participants | async'>
+                    <td>{{participant.firstname}} {{participant.lastname}}</td>
+                    <td>{{participant.shipName}}</td>
+                    <td>{{participant.teamName}}</td>
+                </tr>
+            </table>
+        </div>
+    </section>
+    
+    <!-- Right side menu -->
+    <div id="rightMenu" class="col">
+        <div *ngIf="!hasRoute" class="pt-2">
+            Der er endnu ikke fastlagt en rute
+        </div>
+        <section [(ngModel)]="hasRoute" class="eventList pt-4 col">
+            <div #mapContainer id="map"></div>
+        </section>
+    </div>
+</div>
+

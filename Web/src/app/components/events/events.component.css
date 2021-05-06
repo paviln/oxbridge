@@ -1,0 +1,36 @@
+#eventIcon {
+    width: 65px;
+    height: 80px;
+}
+
+.eventList{
+    min-height: 90vh;
+}
+
+.image-text {
+    border-radius: 10px;
+    background-color: rgba(70, 70, 70, 0.274);
+    display: inline-block;
+}
+
+#image{
+    height: 25vh;
+    min-height: 100px;
+    background-image: url("src/assets/images/regatta.jpg");
+    background-size: cover;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+}
+
+#date{
+    line-height: 0.5;
+}
+
+#rightMenu{
+    background-color: #dfe7e7;
+}
+
+#eventLink{
+    margin-left: -12px;
+    color: black;
+}

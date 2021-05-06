@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:baseViewModel="clr-namespace:Oxbridge.App.ViewModels;assembly=App"
+             baseViewModel:ViewModelLocator.AutoWireViewModel="true"
+             mc:Ignorable="d"
+             Appearing="ContentPage_Appearing" 
+             x:Class="Oxbridge.App.Views.EventView">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Label">
+                <Setter Property="HorizontalTextAlignment" Value="Center"></Setter>
+                <Setter Property="VerticalTextAlignment" Value="Center"></Setter>
+                <Setter Property="FontSize" Value="14"></Setter>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <StackLayout>
+            <Entry Text="{Binding SearchText}" Placeholder="Søg" ></Entry>
+            <ListView SeparatorColor="Transparent" x:Name="navigationList" ItemsSource="{Binding Events}"  SelectedItem="{Binding SelectedEvent, Mode=TwoWay}" HasUnevenRows="True">
+                <ListView.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"></ColumnDefinition>
+                            <ColumnDefinition Width="1*"></ColumnDefinition>
+                            <ColumnDefinition Width="1*"></ColumnDefinition>
+                            <ColumnDefinition Width="1*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Label Text="Event navn" HorizontalOptions="Fill"  Grid.Column="0" FontAttributes="Bold" Margin="1"/>
+                        <Label Text="Event start" HorizontalOptions="Fill"  Grid.Column="1" FontAttributes="Bold" Margin="1"/>
+                        <Label Text="By" HorizontalOptions="Fill"  Grid.Column="2" FontAttributes="Bold" Margin="1"/>
+                        <Label Text="Status" HorizontalOptions="Fill"  Grid.Column="3"  FontAttributes="Bold" Margin="1"/>
+                    </Grid>
+                </ListView.Header>
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="50"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Label Text="{Binding Name}" Grid.Column="0"></Label>
+                                <Label Text="{Binding EventStart}" Grid.Column="1"></Label>
+                                <Label Text="{Binding City}" Grid.Column="2"></Label>
+                                <Label Text="{Binding Status}" Grid.Column="3"></Label>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

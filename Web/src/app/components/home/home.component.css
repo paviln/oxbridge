@@ -1,0 +1,13 @@
+.masthead {
+    height: 95vh;
+    min-height: 500px;
+    background-image: url("src/assets/images/oxbridge.jpg");
+    background-size: cover;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+  }
+
+  .image-text {
+    border-radius: 10px;
+    background-color: rgba(70, 70, 70, 0.274);
+}

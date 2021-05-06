@@ -1,0 +1,19 @@
+﻿[*.cs]
+
+# CS0618: Type or member is obsolete
+dotnet_diagnostic.CS0618.severity = none
+
+# CS4014: Because this call is not awaited, execution of the current method continues before the call is completed
+dotnet_diagnostic.CS4014.severity = none
+
+# IDE0058: Expression value is never used
+csharp_style_unused_value_expression_statement_preference = discard_variable:none
+
+# CS1998: Async method lacks 'await' operators and will run synchronously
+dotnet_diagnostic.CS1998.severity = none
+
+# IDE0049: Simplify Names
+dotnet_style_predefined_type_for_locals_parameters_members = true:none
+
+# IDE0049: Simplify Names
+dotnet_style_predefined_type_for_member_access = true:none

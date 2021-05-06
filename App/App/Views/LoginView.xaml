@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:baseViewModel="clr-namespace:Oxbridge.App.ViewModels;assembly=App"
+             xmlns:customBehaviors="clr-namespace:Oxbridge.App.CustomBehaviors;assembly=App"
+             baseViewModel:ViewModelLocator.AutoWireViewModel="true"
+             mc:Ignorable="d"
+             x:Class="Oxbridge.App.Views.LoginView"
+             >
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="BaseStyle" TargetType="View">
+                <Setter Property="HorizontalOptions" Value="Center"/>
+                <Setter Property="VerticalOptions" Value="Center"/>
+            </Style>
+            <Style TargetType="Button" BasedOn="{StaticResource BaseStyle}">
+                <Setter Property="WidthRequest" Value="160"/>
+                <Setter Property="HeightRequest" Value="45"/>
+                <Setter Property="FontSize" Value="20"/>
+                <Setter Property="TextColor" Value="WhiteSmoke"/>
+                <Setter Property="BackgroundColor" Value="#034593"/>
+                <Setter Property="BorderRadius" Value="8"/>
+            </Style>
+            <Style TargetType="Entry" BasedOn="{StaticResource BaseStyle}">
+                <Setter Property="WidthRequest" Value="250"/>
+                <Setter Property="FontSize" Value="25"/>
+                <Setter Property="HorizontalTextAlignment" Value="Center"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <Frame BackgroundColor="White" CornerRadius="17" BorderColor="White">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.2*"/>
+                    <RowDefinition Height="1.4*"/>
+                    <RowDefinition Height="0.2*"/>
+                    <RowDefinition Height="0.3*"/>
+                    <RowDefinition Height="0.3*"/>
+                    <RowDefinition Height="0.9*"/>
+                </Grid.RowDefinitions>
+                <Image Grid.Row="1" Source="tregattaIcon.png"></Image>
+                <Entry Grid.Row="3" Placeholder="Brugernavn" Text="{Binding Username}">
+                    <Entry.Behaviors >
+                        <customBehaviors:EventToCommandBehavior EventName="Focused" Command="{Binding EntryFocusedCommand}" ></customBehaviors:EventToCommandBehavior>
+                        <customBehaviors:EmailValidatorBehavior x:Name="EmailValidator" IsValid ="{Binding IsEmailValid}"></customBehaviors:EmailValidatorBehavior>
+                    </Entry.Behaviors>
+                </Entry>
+                <Entry Grid.Row="4" Placeholder="Adgangskode" Text="{Binding Password}" IsPassword="True" VerticalOptions="Start">
+                    <Entry.Behaviors >
+                        <customBehaviors:EventToCommandBehavior EventName="Focused" Command="{Binding EntryFocusedCommand}" ></customBehaviors:EventToCommandBehavior>
+                        <customBehaviors:EventToCommandBehavior EventName="Completed" Command="{Binding LoginClickedCMD}" ></customBehaviors:EventToCommandBehavior>
+                    </Entry.Behaviors>
+                </Entry>
+                <Label Text="Forkert brugernavn eller adgangskode" Grid.Row="5"  FontSize="24" IsVisible="{Binding WrongLoginVisibility}" TextColor="Red"></Label>
+                <Button Grid.Row="5" Text="Log ind" Command="{Binding LoginCMD}"></Button>
+            </Grid>
+        </Frame>
+    </ContentPage.Content>
+</ContentPage>

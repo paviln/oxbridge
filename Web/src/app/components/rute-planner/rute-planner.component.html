@@ -1,0 +1,42 @@
+<div class="row">
+    <div class="col-lg-2"></div>
+
+    <!-- map -->
+    <section class="eventList pt-4 col-lg-6">
+        <div #mapContainer id="map"></div>
+    </section>
+
+    <!-- Right side menu -->
+    <div id="rightMenu" class="col">
+        <div class="row pt-4 pl-3">
+            <h3>Event: </h3>
+            <h3 class="font-weight-light pl-2">{{event.name}}</h3>
+        </div>
+
+        <!-- List of checkpoints -->
+        <div id="checkPoints" class="row pl-3 pr-3">
+
+            <table id="table" class="table justify-content-center">
+                <tr>
+                    <th class="pl-2 pt-1">CheckPoint</th>
+                    <th class="pl-3 pt-1">Pin koordinater</th>
+                    <th class="pt-1">Pin koordinater</th>
+                </tr>
+
+                <tr *ngFor="let checkPoint of checkPoints">
+                    <td class="text-center">{{checkPoint.id}}</td>
+                    <td class="pl-3 pr-0">{{checkPoint.pin1.position}}</td>
+                    <td>{{checkPoint.pin2.position}}</td>
+                    <td class="pr-5 mr-5">
+                        <button id="removeCheckPoint" type="button" class="btn" (click)="deleteCheckPoint(checkPoint)">
+                            <i class="fa fa-times-circle"></i>
+                        </button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div *ngIf="checkPoints.length > 1" class="row justify-content-center">
+            <button class="btn btn-info mb-3" (click)="saveRoute()">Gem rute</button>
+        </div>
+    </div>
+</div>

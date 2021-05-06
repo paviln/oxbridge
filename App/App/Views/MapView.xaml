@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:baseViewModel="clr-namespace:Oxbridge.App.ViewModels;assembly=App"
+             xmlns:customBehaviors="clr-namespace:Oxbridge.App.CustomBehaviors;assembly=App"
+             baseViewModel:ViewModelLocator.AutoWireViewModel="true"
+             xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps"
+             x:Class="Oxbridge.App.Views.MapView"
+             xmlns:local="clr-namespace:Oxbridge.App;assembly=App" 
+             xmlns:models="clr-namespace:Oxbridge.App.Models"
+             Appearing="ContentPage_Appearing" 
+             Disappearing="ContentPage_Disappearing"
+             mc:Ignorable="d">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="BaseStyle" TargetType="View">
+                <Setter Property="HorizontalOptions" Value="Center"/>
+                <Setter Property="VerticalOptions" Value="Center"/>
+            </Style>
+            <Style TargetType="Button" BasedOn="{StaticResource BaseStyle}">
+                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="BorderRadius" Value="8"/>
+            </Style>
+            <Style TargetType="Label" BasedOn="{StaticResource BaseStyle}">
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                <Setter Property="VerticalTextAlignment" Value="Center"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <StackLayout Spacing="0">
+            <models:CustomMap MapType="Street" ItemsSource="{Binding Pins}" x:Name="Map">
+                <maps:Map.ItemTemplate>
+                    <DataTemplate>
+                        <maps:Pin Position="{Binding Position}" Address="{Binding Address}" Label="{Binding Label}" Type="{Binding Type}" ></maps:Pin>
+                    </DataTemplate>
+                </maps:Map.ItemTemplate>
+
+            </models:CustomMap>
+            <Grid  IsVisible="{Binding IsReplay}" HeightRequest="55" Margin="0,5,5,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Image Grid.Column="0" HeightRequest="40" WidthRequest="40" Source="{Binding ImageName}">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding PlayPauseCMD}"></TapGestureRecognizer>
+                    </Image.GestureRecognizers>
+                </Image>
+                <Label  Grid.Column="1" Text="{Binding CurrentSpeed}" FontAttributes="Bold"></Label>
+                <Button Grid.Column="2" Text="1x" Command="{Binding SetSpeedCMD}" CommandParameter="1"></Button>
+                <Button Grid.Column="3" Text="5x" Command="{Binding SetSpeedCMD}" CommandParameter="5"></Button>
+                <Button Grid.Column="4" Text="20x" Command="{Binding SetSpeedCMD}" CommandParameter="20"></Button>
+                <Button Grid.Column="5" Text="100x" Command="{Binding SetSpeedCMD}" CommandParameter="100"></Button>
+                <Button Grid.Column="6" Text="200x" Command="{Binding SetSpeedCMD}" CommandParameter="200"></Button>
+            </Grid>
+            <Grid ColumnSpacing="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Frame BorderColor="Black" Grid.Column="0"/>
+                <StackLayout Grid.Column="0">
+                    <ListView SeparatorColor="Transparent" HeightRequest="150" WidthRequest="200" x:Name="navigationList" ItemsSource="{Binding Locations}"  SelectedItem="{Binding SelectedShipFromList}" HasUnevenRows="True">
+                        <ListView.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                                    <ColumnDefinition Width="1*"></ColumnDefinition>
+
+                                </Grid.ColumnDefinitions>
+                                <Label Text="Placering" HorizontalOptions="Fill"  Grid.Column="0" FontAttributes="Bold" Margin="1"/>
+                                <Label Text="Farve" HorizontalOptions="Fill"  Grid.Column="1" FontAttributes="Bold" Margin="1"/>
+                                <Label Text="Team navn" HorizontalOptions="Fill"  Grid.Column="2" FontAttributes="Bold" Margin="1"/>
+                            </Grid>
+                        </ListView.Header>
+
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*"></ColumnDefinition>
+                                            <ColumnDefinition Width="1*"></ColumnDefinition>
+                                            <ColumnDefinition Width="1*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="40"></RowDefinition>
+                                        </Grid.RowDefinitions>
+                                        <Label Text="{Binding Placement}" Grid.Column="0" FontSize="14" TextColor="Black" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"></Label>
+                                        <BoxView BackgroundColor="{Binding Color}" HeightRequest="10" HorizontalOptions="Center" VerticalOptions="Center" Grid.Column="1"></BoxView>
+                                        <Label Text="{Binding TeamName}" Grid.Column="2" FontSize="14" TextColor="Black" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"></Label>
+                                    </Grid>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackLayout>
+                <Frame BorderColor="Black" Grid.Column="1">
+                    <StackLayout Grid.Column="1">
+                        <Label Text="{Binding FollowingText}" ></Label>
+                        <StackLayout Orientation="Horizontal" IsVisible="{Binding IsFollowing}">
+                            <StackLayout>
+                                <Label Text="Båd navn"></Label>
+                                <Label Text="{Binding SelectedShip.Name}"></Label>
+                            </StackLayout>
+                            <StackLayout >
+                                <Label Text="Team navn"></Label>
+                                <Label Text="{Binding SelectedShip.TeamName}"></Label>
+                            </StackLayout>
+                        </StackLayout>
+                        <Button Text="Stop følgning" Command="{Binding StopFollowingCMD}" BorderRadius="8"  HorizontalOptions="Center" VerticalOptions="Center" IsVisible="{Binding IsFollowing}"></Button>
+                    </StackLayout>
+                </Frame>
+            </Grid>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

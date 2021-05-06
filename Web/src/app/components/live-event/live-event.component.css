@@ -1,0 +1,17 @@
+#rightMenu{
+    background-color: #dfe7e7;
+}
+
+#map {
+    height: 84vh;
+    width: 100%;
+    margin-bottom: 2vh;
+}
+
+#table{
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: white;
+    border-radius: 10px;
+}
+

@@ -1,0 +1,103 @@
+<!-- Navigationbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top shadow" style="background-color: #e3f2fd;">
+  <div class="container">
+    <a class="navbar-brand" routerLink="/hjem" routerLinkActive="active">
+      <img src="../assets/images/logoTrans.png" alt="" width="170" height="55">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+      aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse"></div>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/events" routerLinkActive="active">Events</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" (click)="registrationClicked()">Tilmelding</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/omos" routerLinkActive="active">Om os</a>
+        </li>
+      </ul>
+      <div *ngIf="!user">
+        <button class="btn btn-outline-info my-2 my-sm-0 btn-sm" routerLink="/logind">Log ind</button>
+      </div>
+      <div *ngIf="user">
+        <div class="d-inline-block" ngbDropdown #myDrop="ngbDropdown">
+          <button class="btn btn-outline-info mr-2" id="dropdownManual" ngbDropdownAnchor
+            (focus)="myDrop.open()">{{user.firstname}}</button>
+          <div *ngIf="user.role === 'user'" ngbDropdownMenu aria-labelledby="dropdownManual">
+            <button ngbDropdownItem routerLink="/mineEvents">Mine Events</button>
+            <button ngbDropdownItem routerLink="/profil">Profil</button>
+            <button ngbDropdownItem (click)="LogOut()">Log ud</button>
+          </div>
+          <div *ngIf="user.role === 'admin'" ngbDropdownMenu aria-labelledby="dropdownManual">
+            <button ngbDropdownItem routerLink="/administrerEvents">Administrer Events</button>
+            <button ngbDropdownItem routerLink="/profil">Profil</button>
+            <button ngbDropdownItem (click)="LogOut()">Log ud</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<router-outlet></router-outlet>
+
+<!-- Footer -->
+<footer id="footer" class="bg-light">
+  <div class="container bg-light">
+    <div class="container bg-light">
+      <h4 class="text-center text-uppercase pt-3">Kontakt os</h4>
+      <p class="text-center w-75 m-auto">Åbningstider: Man-Fre: 09-16, Lør: 10-14</p>
+      <div class="row bg-light">
+        <div class=" col-lg-4 my-2 bg-light">
+          <div class="card border-0 bg-light">
+            <div class="card-body text-center bg-light">
+              <i class="fa fa-phone fa-2x mb-2" aria-hidden="true"></i>
+              <h6 class="text-uppercase mb-3">Telefon</h6>
+              <p>+45 75252627</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 my-2">
+          <div class="card border-0 bg-light">
+            <div class="card-body text-center">
+              <i class="fa fa-map-marker fa-2x mb-2" aria-hidden="true"></i>
+              <h6 class="text-uppercase mb-3">Kontor</h6>
+              <address>Ellegårvej 3, 6400 Sønderborg</address>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 my-2">
+          <div class="card border-0 bg-light">
+            <div class="card-body text-center">
+              <i class="fa fa-globe fa-2x mb-2" aria-hidden="true"></i>
+              <h6 class="text-uppercase mb-3">email</h6>
+              <p>info@tregatta.com</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 mt-2 mt-sm-1">
+        <ul class="list-unstyled list-inline social text-center">
+          <!--Facebook-->
+          <a class="fb-ic mr-3 ml-4" role="button"><i class="fab fa-lg fa-facebook-f"></i></a>
+          <!--Twitter-->
+          <a class="tw-ic mr-3 ml-3" role="button"><i class="fab fa-lg fa-twitter"></i></a>
+          <!--Instagram-->
+          <a class="ins-ic mr-3 ml-3" role="button"><i class="fab fa-lg fa-instagram"></i></a>
+          <!--Linkedin-->
+          <a class="li-ic mr-3 ml-3" role="button"><i class="fab fa-lg fa-linkedin-in"></i></a>
+          <!--Google +-->
+          <a class="gplus-ic mr-3 ml-3" role="button"><i class="fab fa-lg fa-google-plus-g"></i></a>
+        </ul>
+      </div>
+      <hr>
+    </div>
+  </div>
+</footer>

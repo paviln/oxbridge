@@ -1,0 +1,47 @@
+<div id="image">
+    <div class="container h-100 align-items-start">
+        <div class="row h-100 align-items-end pb-4">
+            <div class=" col-lg text-start">
+                <h1 class="image-text font-weight-normal text-white pb-2 pl-3 pr-3">Events</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-2"></div>
+    <section class="eventList pt-4 col-lg-6">
+
+        <!-- List of events -->
+        <div class="container pb-4" *ngFor="let event of filteredEvents | async">
+            <div class="event row p-1 pb-3">
+                <div class="pt-2">
+                    <img id="eventIcon" src="../../../assets/images/pin.png">
+                </div>
+                <div class="col-sm">
+                    <a id="eventLink" class="btn btn-link" [routerLink]="['/events', event.eventId, event.name]" routerLinkActive="active"><h4 class="pt-1">{{event.name}}</h4></a>
+                    <div id="date" class="row pl-3">
+                        <label>{{event.eventStart | date:'d. MMM yyyy'}} - {{event.eventEnd | date:'d. MMM yyyy'}}</label>
+                    </div>
+                    <div id="city" class="row pl-3">
+                        <label>{{event.city}}</label>
+                    </div>
+                </div>
+                <div class="col-sm pt-4" *ngIf="event.isLive">
+                    <button class="btn btn-info" [routerLink]="['/events', event.eventId, event.name, 'live']" routerLinkActive="active">Se live</button>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="(filteredEvents | async).length === 0">
+            Ingen events macthede det søgte
+        </div>
+    </section>
+
+    <!-- Right side menu -->
+    <div id="rightMenu" class="col">
+        <form class="form-inline p-3 pt-4">
+            <input class="form-control mr-sm-2 form-control-sm" type="search" placeholder="Søg efter event" [formControl]="filter" aria-label="Søg">
+            <button class="btn btn-outline-info my-2 my-sm-0 btn-sm" type="submit">Søg</button>
+        </form>
+    </div>
+</div>

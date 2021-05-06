@@ -1,0 +1,98 @@
+<div class="register">
+    <div class="row">
+
+        <!-- Login -->
+        <div class="col-md-3 register-left">
+            <img src="assets/images/shipIcon.png" />
+            <h3>Velkommen</h3>
+            <p>Hvis du allerede har en profil kan du logge ind her</p>
+            <input type="submit" value="Login" routerLink="/logind" /><br />
+        </div>
+        <div class="col-md-9 register-right">
+
+            <!-- Register form -->
+            <h3 class="register-heading">Opret en profil</h3>
+            <form (ngSubmit)="OnSubmit()" #registerForm="ngForm">
+                <div class="row register-form">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="text" class="form-control" [(ngModel)]="model.firstname" #firstname="ngModel"
+                                name="firstname" placeholder="Fornavn" pattern="^[a-zA-ZÆØÅæøå ]*" required />
+                            <div *ngIf="firstname.invalid && firstname.touched">
+                                <div *ngIf="firstname.errors.required">
+                                    Fornavn er nødvendig
+                                </div>
+                                <div *ngIf="firstname.errors.pattern">
+                                    Fornavn må kun indeholde bogstaver
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" [(ngModel)]="model.lastname" #lastname="ngModel"
+                                name="lastname" placeholder="Efternavn" pattern="^[a-zA-ZÆØÅæøå ]*" required />
+                            <div *ngIf="lastname.invalid && lastname.touched">
+                                <div *ngIf="lastname.errors.required">
+                                    Efternavn er nødvendig
+                                </div>
+                                <div *ngIf="lastname.errors.pattern">
+                                    Efternavn må kun indeholde bogstaver
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" class="form-control" placeholder="Email"
+                                [(ngModel)]="model.emailUsername" #email="ngModel" name="email"
+                                pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
+                                required />
+                            <div *ngIf="email.invalid && email.touched">
+                                <div *ngIf="email.errors.required">
+                                    Email er nødvendig
+                                </div>
+                                <div *ngIf="email.errors.pattern">
+                                    Ugyldig email
+                                </div>
+                                <div *ngIf="!isAvaliable">
+                                    Der eksisterer allerede en bruger med denne email
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="password" class="form-control" placeholder="Adgangskode" value=""
+                                [(ngModel)]="model.password" #password="ngModel" name="password"
+                                pattern="^(?=.*[a-zA-ZÆØÅæøå])(?=.*\d)[a-zA-ZÆØÅæøå\d]*$" minlength="8" required />
+
+                            <div *ngIf="password.invalid && password.touched">
+                                <div *ngIf="password.errors.required">
+                                    Adgangskode er nødvendig
+                                </div>
+                                <div *ngIf="password.errors.pattern">
+                                    Adgangskoden skal indeholde både tal og bogstaver
+                                </div>
+                                <div *ngIf="password.errors.minlength">
+                                    Adgangskoden skal være mindst 8 karakterer lang
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control" placeholder="Bekræft Adgangskode" value=""
+                                [(ngModel)]="model.confirmPassword" #confirmPassword="ngModel" name="confirmPassword"
+                                ngValidateEqual="password" required />
+                            <div *ngIf="confirmPassword.invalid && confirmPassword.touched">
+                                <div *ngIf="confirmPassword.errors.required">
+                                    Bekræft Adgangskode er nødvendig
+                                </div>
+                                <div *ngIf="confirmPassword.hasError('notEqual') && password.valid">
+                                    Matcher ikke ovenstående adgangskode
+                                </div>
+                            </div>
+                            <input type="submit" class="btnRegister" value="Registrer"
+                                [disabled]="!registerForm.form.valid" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,12 @@
+#image {
+    height: 25vh;
+    min-height: 150px;
+    background-image: url("src/assets/images/about.jpg");
+    background-size: cover;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+  }
+
+  #mainSection {
+    height: 40vh;
+  }

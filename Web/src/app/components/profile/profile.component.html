@@ -1,0 +1,86 @@
+<div id="image">
+    <div class="container h-100 align-items-start">
+        <div class="row h-100 align-items-end pb-4">
+            <div class=" col-lg text-start">
+                <h1 class="image-text font-weight-normal text-white pb-2 pl-3 pr-3">Din profil</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="main" class="row">
+    <div class="col-lg-2"></div>
+    <div class="pt-5 col-lg-6">
+        <div id="profileInfo">
+            <h4 class="ml-5 mb-4">Dine profiloplysninger</h4>
+
+            <!-- Form for user information -->
+            <form class="form" #updateUserForm="ngForm" (ngSubmit)="OnSubmit()">
+                <div class="row ml-5 mb-2">
+                    <div class="col-xsm">
+                        <input type="text" class="form-control" placeholder="Fornavn" required
+                            [(ngModel)]="user.firstname" #firstname="ngModel" name="firstname">
+                    </div>
+                    <div>
+                        <input type="text" class="form-control ml-3" placeholder="Efternavn" required
+                            [(ngModel)]="user.lastname" #lastname="ngModel" name="lastname">
+                    </div>
+                </div>
+                <div class="row ml-5 mb-2">
+                    <div class="col-xsm">
+                        <input type="password" class="psw form-control" placeholder="Gamle adgangskode">
+                    </div>
+                    <div>
+                        <input type="password" class="psw form-control ml-3" placeholder="Ny adgangskode">
+                    </div>
+                </div>
+                <div class="row ml-5">
+                    <div>
+                        <input type="text" class="form-control" placeholder="Email" required
+                            [(ngModel)]="user.emailUsername" #emailUsername="ngModel" name="emailUsername">
+                    </div>
+                    <div>
+                        <button class="btn btn-outline-info ml-3" type="submit"
+                            [disabled]="!updateUserForm.form.valid">Gem ændringer</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- List of ships -->
+        <div class="container pt-4 ml-4" *ngFor="let ship of ships | async">
+            <div class="row p-1 pb-3">
+                <div class="pt-2">
+                    <img id="ship" src="../../../assets/images/boatIcon.png">
+                </div>
+                <div class="col-xsm pt-4 pl-1">
+                    <h5 class="font-weight-normal">{{ship.name}}</h5>
+                </div>
+                <div class="col pt-3 pl-3">
+                    <button class="btn" (click)="deleteShip(ship)">
+                        <i class="fa fa-times-circle"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right side menu -->
+    <div id="rightMenu" class="col">
+
+        <!-- Form for submitting new ship -->
+        <form id="addShip" class="p-3 pt-4 justify-content-center" #AddShipForm="ngForm" (ngSubmit)="OnShipSubmit()">
+            <div class="row justify-content-center pb-3">
+                <h3 class="font-weight-normal">Tilføj båd her</h3>
+            </div>
+            <div class="row justify-content-center pb-2">
+                <div class="col">
+                    <input class="form-control mr-sm-2 form-control-sm" placeholder="Båd navn" required
+                        [(ngModel)]="model.name" #shipName="ngModel" name="shipName">
+                </div>
+                <button class="btn btn-info my-sm-0 btn-sm mr-3" type="submit"
+                    [disabled]="!AddShipForm.form.valid">Tilføj båd</button>
+            </div>
+        </form>
+    </div>
+</div>

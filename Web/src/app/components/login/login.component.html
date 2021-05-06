@@ -1,0 +1,26 @@
+<div class="register">
+    <div class="register-left">
+        <img src="assets/images/shipIcon.png" />
+        <h3 class="header">Log ind</h3>
+
+        <!-- Login form -->
+        <form class="form" (ngSubmit)="OnSubmit()">
+            <input class="form-control" type="text" placeholder="Email/brugernavn" [(ngModel)]="model.emailUsername"
+                name="email" #email="ngModel">
+            <input class="form-control" type="password" placeholder="Adgangskode" [(ngModel)]="model.password"
+                name="password" #password="ngModel">
+            <div *ngIf="(email.touched || password.touched) && (email.pristine || password.pristine)">
+                <div *ngIf="wrongLogin">
+                    Der findes ikke en bruger med den indtastede email
+                </div>
+                <div *ngIf="wrongPassword">
+                    Forkert adgangskode
+                </div>
+            </div>
+            <br />
+            <input id="login" type="submit" value="Login" routerLink="/logind" />
+        </form>
+        <br />
+        <p><a routerLink="/tilmelding">Opret profil</a></p>
+    </div>
+</div>

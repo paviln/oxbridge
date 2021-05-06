@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MasterDetailPage IsPresented="{Binding IsPresented, Mode=TwoWay}"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Oxbridge.App.Views.MasterDetail">
+    <MasterDetailPage.Master >
+        <ContentPage Title="Menu" Padding="0">
+            <ContentPage.Content>
+                <StackLayout Padding="0" BackgroundColor="White">
+                    <StackLayout BackgroundColor="#034593" HeightRequest="60" Padding="0" Margin="0,0,0,10">
+                        <Image Source="tregattaIcon.png" Margin="8,4,8,10" HeightRequest="50" VerticalOptions="Center" HorizontalOptions="Center">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding HomeClickedCMD}"/>
+                            </Image.GestureRecognizers>
+                        </Image>
+                    </StackLayout>
+                    <StackLayout Margin="10" Orientation="Vertical">
+                        <ListView SeparatorColor="Transparent" x:Name="navigationList" ItemsSource="{Binding MenuItems, Mode=TwoWay}"  SelectedItem="{Binding SelectedItem, Mode=TwoWay}" HasUnevenRows="True">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <ViewCell>
+                                        <StackLayout Orientation="Horizontal" BackgroundColor="White" Margin="5">
+                                            <Image VerticalOptions="CenterAndExpand" Source="{Binding ImagePath}" WidthRequest="48"></Image>
+                                            <Label Text="{Binding Text}" FontSize="25" TextColor="Black" VerticalTextAlignment="Center"></Label>
+                                        </StackLayout>
+                                    </ViewCell>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </StackLayout>
+                    <Label Text="Log ud" VerticalOptions="End" HorizontalOptions="Center" IsVisible="{Binding IsLogOutVisible}" TextColor="Black" FontSize="22" FontAttributes="Bold" Margin="0,0,0,15">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding LogOutCMD}"> </TapGestureRecognizer>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </StackLayout>
+            </ContentPage.Content>
+        </ContentPage>
+    </MasterDetailPage.Master>
+
+    <MasterDetailPage.Detail>
+        <ContentPage x:Name="DetailPage" Title="Content" Padding="15">
+            <ContentPage.Padding>
+                <OnPlatform x:TypeArguments="Thickness" >
+                    <On Platform="Android">15</On>
+                    <On Platform="IOS">10</On> 
+                </OnPlatform>
+            </ContentPage.Padding>
+            <ContentPage.Content>
+                <StackLayout Margin="10">
+                    <Image Source="tregattaIcon.png" VerticalOptions="CenterAndExpand"></Image>
+                </StackLayout>
+            </ContentPage.Content>
+        </ContentPage>
+    </MasterDetailPage.Detail>
+</MasterDetailPage>

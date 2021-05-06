@@ -1,0 +1,33 @@
+<div class="row">
+    <div class="col-lg-2"></div>
+
+    <!-- The map -->
+    <section class="eventList pt-4 col-lg-6">
+        <div #mapContainer id="map"></div>
+    </section>
+
+    <!-- Right side menu -->
+    <div id="rightMenu" class="col">
+        <div class="row pt-4 pl-3">
+            <h3>Event: </h3>
+            <h3 class="font-weight-light pl-2">{{event.name}}</h3>
+        </div>
+
+        <!-- The scoreboard -->
+        <div id="scoreboard" class="row pl-3 pr-3">
+            <table id="table" class="table justify-content-center">
+                <tr>
+                    <th class="pt-1 text-center">Placering</th>
+                    <th class="pt-1">Team navn</th>
+                    <th class="pt-1">Farve</th>
+                </tr>
+
+                <tr *ngFor="let score of scoreboard | async">
+                    <td class="text-center">{{score.placement}}</td>
+                    <td class="pl-3 pr-0">{{score.teamName}}</td>
+                    <td>{{score.color}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

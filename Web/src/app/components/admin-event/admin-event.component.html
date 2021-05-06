@@ -1,0 +1,153 @@
+<div id="image">
+    <div class="container h-100">
+        <div class="row h-100 align-items-end pb-4">
+            <div class="image-text col-lg text-start">
+                <h1 class="font-weight-normal text-white">Administrer Event</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-2"></div>
+    <section class="eventList pt-4 col-lg-6">
+        <div class="container">
+
+            <!-- FormGroup for editing event information -->
+            <form [formGroup]="eventForm" *ngIf="event | async" (ngSubmit)="onEventSubmit()">
+                <div class="event row p-1 pb-2">
+                    <div class="pt-4">
+                        <img id="eventIcon" src="../../../assets/images/pin.png">
+                    </div>
+                    <div class="col-sm pt-1">
+                        <input id="eventName" class="font-weight-bold font-size-l" type="text" formControlName="name">
+                        <div class="row pl-3 pt-2">
+                            <input class="font-weight-light font-size-l" type="date" formControlName="eventStart"
+                                value="{{(event | async).eventStart | date:'yyyy-MM-dd'}}">
+                            <input class="font-weight-light ml-1" type="date" formControlName="eventEnd"
+                                value="{{(event | async).eventEnd | date:'yyyy-MM-dd'}}">
+                        </div>
+                        <div class="row pl-3 pt-2">
+                            <input class="font-weight-light mr-1" type="text" formControlName="startTime">
+                            <input class="font-weight-light" type="text" formControlName="endTime">
+                        </div>
+                        <div class="row pl-3 pt-2">
+                            <input class="font-weight-light" type="text" formControlName="city">
+                            <button type="submit" [disabled]="!eventForm.valid"
+                                class="btn btn-outline-info ml-2">Gem</button>
+                        </div>
+                    </div>
+
+                    <!-- Event buttons -->
+                    <div class="col-sm">
+                        <button type="button" *ngIf="!(event|async).isLive" id="eventHandler"
+                            class="btn btn-success mr-4" (click)="startEvent()">Start Event</button>
+                        <button type="button" *ngIf="(event|async).isLive" id="eventHandler" class="btn btn-danger mr-4"
+                            (click)="stopEvent()">Stop Event</button>
+                        <button type="button" class="btn btn-info " routerLink="ruteplanner">{{buttonText}}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- List of participants -->
+        <div class="container pb-4">
+            <h4 class="pt-4">Deltagere</h4>
+            <table>
+                <tr>
+                    <th class="pr-5 ">Fornavn</th>
+                    <th class="pr-5">Efternavn</th>
+                    <th class="pr-5">Skibsnavn</th>
+                    <th class="pr-5">Teamnavn</th>
+                    <th>Email</th>
+                </tr>
+                <tr *ngFor="let participant of filteredParticipants | async">
+                    <td>
+                        <input class="form-control" required [(ngModel)]="participant.firstname" #firstname="ngModel"
+                            name="firstname">
+                    </td>
+                    <td>
+                        <input class="form-control" required [(ngModel)]="participant.lastname" #lastname="ngModel"
+                            name="lastname">
+                    </td>
+                    <td>
+                        <input class="form-control" required [(ngModel)]="participant.shipName" #shipName="ngModel"
+                            name="shipName">
+                    </td>
+                    <td>
+                        <input class="form-control" required [(ngModel)]="participant.teamName" #teamName="ngModel"
+                            name="teamName">
+                    </td>
+                    <td>
+                        <input class="form-control" required [(ngModel)]="participant.emailUsername"
+                            #emailUsername="ngModel" name="emailUsername" disabled>
+                    </td>
+                    <td><button type="button" class="btn btn-outline-info"
+                            (click)="editParticipant(participant)">Gem</button></td>
+                    <td><button type="button" class="btn btn-info" (click)="deleteParticipant(participant)">
+                            <i class="fa fa-times"></i>
+                        </button></td>
+                </tr>
+            </table>
+        </div>
+    </section>
+
+    <!-- Right side menu -->
+    <div id="rightMenu" class="col">
+        <form class="form-inline p-3 pt-4">
+            <input class="form-control mr-sm-2 form-control-sm" type="search" placeholder="Søg efter deltager"
+                [formControl]="filter" aria-label="Søg">
+            <button class="btn btn-outline-info my-2 my-sm-0 btn-sm" type="submit">Søg</button>
+        </form>
+
+        <!-- Form for adding participant -->
+        <div class="container justify-content-center col-sm-9 mt-5">
+            <form id="AddParticipant" class="p-3 pt-4 justify-content-center" #AddParticipantForm="ngForm"
+                (ngSubmit)="onSubmit(AddParticipantForm)">
+                <div class="row justify-content-center pb-3">
+                    <h3 class="font-weight-normal">Tilføj deltager her</h3>
+                </div>
+                <div class="row justify-content-center pb-2">
+                    <div class="col">
+                        <input class="form-control mr-sm-2 form-control-sm" placeholder="Fornavn" required
+                            [(ngModel)]="model.firstname" #firstname="ngModel" name="firstname">
+                    </div>
+                    <div class="col">
+                        <input class="form-control mr-sm-2 form-control-sm" placeholder="Efternavn" required
+                            [(ngModel)]="model.lastname" #lastname="ngModel" name="lastname">
+                    </div>
+                </div>
+                <div class="row justify-content-center pb-2">
+                    <div class="col">
+                        <input class="form-control mr-sm-2 form-control-sm" placeholder="Bådnavn" required
+                            [(ngModel)]="model.shipName" #shipName="ngModel" name="shipName">
+                    </div>
+                    <div class="col">
+                        <input class="form-control mr-sm-2 form-control-sm" placeholder="Teamnavn" required
+                            [(ngModel)]="model.teamName" #teamName="ngModel" name="teamName">
+                    </div>
+                </div>
+                <div class="row justify-content-center pr-3">
+                    <div class="col">
+                        <input class="form-control mr-sm-2 form-control-sm" placeholder="Email" required
+                            [(ngModel)]="model.emailUsername" #email="ngModel" name="email">
+                    </div>
+                    <button class="btn btn-info my-sm-0 btn-sm " type="submit"
+                        [disabled]="!AddParticipantForm.form.valid">Tilmeld</button>
+                </div>
+            </form>
+
+            <div class="row container justify-content-center pt-3">
+                <p>eller</p>
+            </div>
+            <div class="row container justify-content-center ">
+                <button class="btn btn-info">Importer fra CSV</button>
+            </div>
+        </div>
+
+        <!-- Button for deleting the event -->
+        <div id="bottom" class="justify-content-bottom">
+            <button class="btn btn-danger" (click)="deleteEvent()">Slet event</button>
+        </div>
+    </div>
+</div>

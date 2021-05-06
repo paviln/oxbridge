@@ -1,0 +1,102 @@
+<div id="image">
+    <div class="container h-100 align-items-start">
+        <div class="row h-100 align-items-end pb-4">
+            <div class=" col-lg text-start">
+                <h1 class="image-text font-weight-normal text-white pl-3 pr-3">Tilmeldte events</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-2"></div>
+    <section class="eventList pt-4 col-lg-6">
+
+        <!-- List of events -->
+        <div class="container" *ngFor="let event of filteredEvents | async">
+            <div class="event row p-1 pb-3">
+                <div class="pt-2">
+                    <img id="eventIcon" src="../../../assets/images/pin.png">
+                </div>
+                <div class="col-sm">
+                    <a id="eventLink" class="btn btn-link" [routerLink]="['/events', event.eventId, event.name]"
+                        routerLinkActive="active">
+                        <h4 class="pt-1">{{event.name}}</h4>
+                    </a>
+                    <div id="date" class="row pl-3">
+                        <label>{{event.eventStart | date}} - {{event.eventEnd | date}}</label>
+                    </div>
+                    <div id="city" class="row pl-3">
+                        <label>{{event.city}}</label>
+                    </div>
+                </div>
+                <div class="col-sm pt-4">
+                    <div class="row">
+                        <label class="font-weight-bold pr-1">Team navn:</label>
+                        <label>{{event.teamName}}</label>
+                    </div>
+                    <div class="row">
+                        <label class="font-weight-bold pr-1">Båd: </label>
+                        <label>{{event.shipName}}</label>
+                    </div>
+                </div>
+                <div class="col-sm pt-4">
+                    <button *ngIf="event.actualEventStart === undefined" class="btn btn-outline-danger"
+                        (click)="unSubToEvent(event)">Afmeld
+                        <a class="fa fa-times"></a>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="!(events | async) || (events | async).length === 0">
+            <p>Du er endnu ikke tilmeldt nogen events</p>
+        </div>
+    </section>
+
+    <!-- Right side menu -->
+    <div id="rightMenu" class="col">
+        <form class="form-inline p-3 pt-3">
+            <input class="form-control mr-sm-2 form-control-sm" type="search" placeholder="Søg efter event"
+                [formControl]="filter" aria-label="Søg">
+            <button class="btn btn-outline-info my-2 my-sm-0 btn-sm" type="submit">Søg</button>
+        </form>
+
+        <!-- Participant submit form -->
+        <div class="container justify-content-center col-sm-9 mt-5">
+            <form id="eventReg" class="p-3 pt-4 justify-content-center" #SignUpForm="ngForm"
+                (ngSubmit)="OnSubmit(SignUpForm)">
+                <div class="row justify-content-center pb-3">
+                    <h3 class="font-weight-normal">Tilmeld dig et event her</h3>
+                </div>
+                <div class="row justify-content-center pb-2">
+                    <div class="col">
+                        <input class="form-control mr-sm-2 form-control-sm" placeholder="Team navn" required
+                            [(ngModel)]="model.teamName" #teamName="ngModel" name="teamName">
+                    </div>
+                    <div id="selectLabel" class="col-sm-2 pt-1">
+                        <label>Båd: </label>
+                    </div>
+                    <div class="col p-0 pr-3">
+                        <select id="select" class="form-control" required [(ngModel)]="model.ship" name="shipName">
+                            <option *ngFor="let ship of (ships | async)" [ngValue]="ship">{{ship.name}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row justify-content-center pr-3">
+                    <div class="col">
+                        <input class="form-control mr-sm-2 form-control-sm" placeholder="Eventkode" required
+                            [(ngModel)]="model.eventCode" #eventCode="ngModel" name="eventCode">
+                    </div>
+                    <button class="btn btn-info my-sm-0 btn-sm " type="submit"
+                        [disabled]="!SignUpForm.form.valid">Tilmeld</button>
+                </div>
+                <div *ngIf="alreadySignedUp" class="row justify-content-center pt-2">
+                    <label>Du er allerede tilmeldt dette event</label>
+                </div>
+                <div *ngIf="WrongEventCode" class="row justify-content-center pt-2">
+                    <label>Ugyldig eventkode</label>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

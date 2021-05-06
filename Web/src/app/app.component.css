@@ -1,0 +1,11 @@
+section {
+    padding: 10px 0;
+}
+
+#footer{
+    box-shadow: 0px 0px 15px 0px rgba(112, 112, 112, 0.45);
+}
+
+.nav-link{
+    cursor: pointer;
+}
