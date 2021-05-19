@@ -1,6 +1,6 @@
 import express, {Router} from 'express';
-import eventController from '../controllers/event.controller';
 import authorize from '../middlewares/authorize';
+import eventController from '../controllers/event.controller';
 
 // eslint-disable-next-line new-cap
 const router: Router = express.Router();
@@ -12,7 +12,7 @@ router.post('/', authorize, eventController.create);
 router.get('/', eventController.findAll);
 
 // Retrieve a single Event with eventId
-router.get('/:eventId', authorize, eventController.findOne);
+router.get('/:eventId', eventController.findOne);
 
 // Update an Event with given eventId
 router.put('/:eventId', authorize, eventController.update);
@@ -30,6 +30,8 @@ router.get('/stopEvent/:eventId', authorize, eventController.stopEvent);
 // Checks if event with given eventId has a route
 router.get('/hasRoute/:eventId', authorize, eventController.hasRoute);
 
+// Checks if event with given eventId has a route
+router.get('/events/hasRoute/:eventId', eventController.hasRoute);
 // Retrieve all events with participant
 router.get('/myEvents/findFromUsername',
     authorize, eventController.findFromUsername);

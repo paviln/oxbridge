@@ -1,7 +1,7 @@
 {
   "name": "smartrack-project",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "app.js",
   "directories": {
     "test": "tests"
   },
@@ -9,7 +9,7 @@
     "node": "8.9.4"
   },
   "scripts": {
-    "start": "tsc && node dist/server.js"
+    "start": "tsc && node dist/app.js"
   },
   "dependencies": {
     "azure-iothub": "^1.14.0",
@@ -20,6 +20,8 @@
     "cors": "^2.8.5",
     "dotenv": "^9.0.2",
     "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
+    "express-http-custom-error": "https://github.com/paviln/express-http-custom-error.git",
     "helmet": "^4.6.0",
     "jsonwebtoken": "^8.5.1",
     "mocha": "^8.4.0",

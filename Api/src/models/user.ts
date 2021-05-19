@@ -1,3 +1,4 @@
+/* eslint-disable no-invalid-this */
 import mongoose, {Document, Schema} from 'mongoose';
 import bcrypt from 'bcryptjs';
 
@@ -29,8 +30,8 @@ const UserSchema: Schema = new Schema({
 
 UserSchema.pre<IUser>('save', async function(next) {
   const user: IUser = this;
+  if (!user.isModified('password')) return next();
   const hash = await bcrypt.hash(user.password, 10);
-
   user.password = hash;
   next();
 });
