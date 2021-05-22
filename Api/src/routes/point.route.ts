@@ -10,7 +10,7 @@ router.get('/racePoints/findStartAndFinish/:eventId',
 
 // Retrieve all racepoints from an specific event
 router.get('/racepoints/fromEventId/:eventId',
-    pointController.findAllEventRacePoints);
+    pointController.findAllEventPoints);
 
 // Creates a new route of racepoints for an event
 router.post('/racepoints/createRoute/:eventId', pointController.createRoute);

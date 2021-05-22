@@ -1,12 +1,17 @@
-import bodyParser from 'body-parser';
 import express from 'express';
+import 'express-async-errors';
+import {errorHandler} from 'express-http-custom-error';
+import bodyParser from 'body-parser';
 import cors from 'cors';
 import helmet from 'helmet';
 import mongoose from 'mongoose';
 import routes from './routes';
+import dotenv from 'dotenv';
 
 const app = express();
 
+dotenv.config({path: __dirname + '/.env'});
+console.log(process.env.NODE_ENV);
 app.use(cors());
 
 // Parse body params and attache them to req.body.
@@ -32,3 +37,5 @@ app.use('/api', routes);
 app.listen(process.env.PORT || 3000, () => {
   console.log('We are now listening on port 3000 (serverside)');
 });
+
+app.use(errorHandler);

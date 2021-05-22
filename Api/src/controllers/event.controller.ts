@@ -5,16 +5,11 @@ import Team, {ITeam} from '../models/team';
 import Point, {IPoint} from '../models/point';
 
 // Create and Save a new Event
-const create = (req: Request, res: Response) => {
+const create = async (req: Request, res: Response) => {
   // Saving the new Event in the DB
   const event: IEvent = req.body;
-
-  event.save(req.body, (err: any) => {
-    if (err) {
-      return res.send(err);
-    }
-    res.status(201).json(event);
-  });
+  await event.save(req.body);
+  res.status(201).json(event);
 };
 
 // Checking if event has a route

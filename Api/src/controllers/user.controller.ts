@@ -1,180 +1,97 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import {NotFound} from 'express-http-custom-error';
 import config from '../config/config';
 import {Request, Response} from 'express';
 import User, {IUser} from '../models/user';
 
-// Retrieve and return all users from the database.
-const findAll = (req: Request, res: Response) => {
-  // Finding all users
-  User.find({}, (err: any, users: IUser) => {
-    if (err) {
-      return res.status(500).send({
-        message: err.message || 'Some error occurred while retriving users'});
-    }
-    res.status(200).json(users);
-  });
+// Retrieve all users
+const findAll = async (req: Request, res: Response) => {
+  const users: IUser[] = await User.find().exec();
+  res.status(200).json(users);
 };
 
 // Find a single user with the specified email
-const findOne = (req: Request, res: Response) => {
-  // Finding the user with the given userId
-  User.findOne({email: req.params.email}, (err: any, user: IUser) => {
-    if (err) {
-      return res.status(500).send({
-        message: 'Error retrieving user with userName ' + req.params.email});
-    }
-    if (!user) {
-      return res.status(404).send({
-        message: 'User not found with userName ' + req.params.email});
-    }
-
-    res.status(200).send(user);
-  });
+const findOne = async (req: Request, res: Response) => {
+  const user = await User.findOne({email: req.params.email}).exec();
+  if (!user) {
+    throw new NotFound(null, 'No user with that email exists.');
+  }
+  res.status(200).json(user);
 };
 
 // Update a user with the specified email
-const update = (req: Request, res: Response) => {
-  // Updating the user
-  const hashedPassword = bcrypt.hashSync(req.body.password, 10);
+const update = async (req: Request, res: Response) => {
   const user = new User(req.body);
-  user.password = hashedPassword;
   user.isAdmin = req.body.isAdmin;
   const filter = {email: user.email};
-  User.findOneAndUpdate(filter, user, null, (err: any, user: IUser | null) => {
-    if (err) {
-      res.send(err);
-    }
-    if (!user) {
-      return res.status(404).send({
-        message: 'User not found with id ' + req.params.email});
-    }
-
-    res.status(202).json(user);
-  });
+  const updatedUser = await User.findOneAndUpdate(filter, user);
+  if (!user) {
+    throw new NotFound('User not found with id ' + req.params.email);
+  }
+  res.status(202).json(updatedUser);
 };
 
 // Delete a user with the specified email
-const remove = (req: Request, res: Response) => {
+const remove = async (req: Request, res: Response) => {
   const filter = {email: req.params.email};
-  User.findOneAndDelete(filter, null, (err: any, user: IUser | null) => {
-    if (err) {
-      res.send(err);
-    }
-    if (!user) {
-      return res.status(404).send({
-        message: 'User not found with id ' + req.params.email},
-      );
-    }
+  const deletedUser: IUser | null = await User.findOneAndDelete(filter);
+  if (!deletedUser) {
+    return res.status(404).send({
+      message: 'No user found with email ' + req.params.email},
+    );
+  }
 
-    res.status(202).json(user);
-  });
+  res.status(202).json(deletedUser);
 };
 
 // Register a new admin user and return token
 const registerAdmin = (req: Request, res: Response) => {
-  // Checking that no other user with that username exists
-  User.find({email: req.body.email}, function(err, users) {
+  // Creating the new user
+  const user = new User(req.body);
+  user.isAdmin = true;
+
+  user.save(function(err) {
     if (err) {
-      return res.status(500).send({
-        message: err.message || 'Some error occurred while retriving users'},
-      );
+      return res.status(500)
+          .send('There was a problem registrating the user');
     }
-
-    if (users) {
-      return res.status(409).send(
-          {
-            message: 'User with that username already exists',
-          },
-      );
-    }
-
-    // Creating the new user
-    const hashedPassword = bcrypt.hashSync(req.body.password, 10);
-    const user = new User(req.body);
-    user.password = hashedPassword;
-    user.isAdmin = true;
-
-    user.save(function(err) {
-      if (err) {
-        return res.status(500)
-            .send('There was a problem registrating the user');
-      }
-      const payload = {id: user.email, isAdmin: true};
-      const token = jwt.sign(payload, config.jwtSectetKey, {expiresIn: 86400});
-      res.status(201).send({auth: true, token: token});
-    });
+    const payload = {id: user.email, isAdmin: true};
+    const token = jwt.sign(payload, config.jwtSectetKey, {expiresIn: 86400});
+    res.status(201).send({auth: true, token: token});
   });
 };
 
 // Register a new user and return token
-const register = (req: Request, res: Response) => {
-  // Checking that no user with that username exists
-  const filter = {emailUsername: req.body.emailUsername};
-  User.findOne(filter, (err: any, user: IUser) => {
-    if (err) {
-      return res.status(500).send({
-        message: err.message || 'Some error occurred while retriving users'});
-    }
-
-    if (user) {
-      return res.status(409).send({
-        message: 'User with that username already exists'});
-    }
-
-    // Creating the user
-    const hashedPassword = bcrypt.hashSync(req.body.password, 10);
-    const newUser: IUser = new User(req.body);
-    newUser.password = hashedPassword;
-    newUser.isAdmin = false;
-
-    newUser.save((err) => {
-      if (err) {
-        return res.status(500)
-            .send('There was a problem registrating the user');
-      }
-
-      // returning a token
-      const payload = {id: newUser.email, isAdmin: false};
-      const token = jwt.sign(payload, config.jwtSectetKey, {expiresIn: 86400});
-      res.status(201).send({auth: true, token: token});
-    });
-  });
+const register = async (req: Request, res: Response) => {
+  // Creating the user
+  const newUser: IUser = new User(req.body);
+  const savedUser = await newUser.save();
+  if (!savedUser) {
+    throw new Error('Failed to save user.');
+  }
+  // returning a token
+  const token = jwt.sign(savedUser.toJSON(),
+      config.jwtSectetKey, {expiresIn: 86400});
+  res.status(201).send({auth: true, token: token});
 };
 
 // Check login info and return login status
-const login = (req: Request, res: Response) => {
+const login = async (req: Request, res: Response) => {
   // Find the user and validate the password
-  const filter = {emailUsername: req.body.emailUsername};
-  User.findOne(filter, (err: any, user: IUser) => {
-    if (err) {
-      return res.status(500).send('Error on the server');
-    }
-    if (!user) {
-      return res.status(403).json('Username incorrect');
-    }
-
-    const valid = bcrypt.compareSync(req.body.password, user.password);
-    if (!valid) {
-      return res.status(401).send(
-          {
-            auth: false,
-            token: null,
-            message: 'Invalid password',
-          },
-      );
-    }
-    const payload = {id: user.email, role: user.isAdmin};
-    const token = jwt.sign(payload, config.jwtSectetKey, {expiresIn: 86400});
-    res.status(200).send(
-        {
-          emailUsername: user.email,
-          firstname: user.firstname,
-          lastname: user.lastname,
-          auth: true,
-          token: token,
-        });
-  });
+  const filter = {email: req.body.emailUsername};
+  const user: IUser | null = await User.findOne(filter);
+  if (!user) {
+    throw new NotFound('No user exist with provided credentials.');
+  }
+  const valid = bcrypt.compareSync(req.body.password, user.password);
+  if (!valid) {
+    throw new Error('Invalid password.');
+  }
+  // returning a token
+  const token = jwt.sign(user.toJSON(),
+      config.jwtSectetKey, {expiresIn: 86400});
+  res.status(200).send(token);
 };
 
 export default {

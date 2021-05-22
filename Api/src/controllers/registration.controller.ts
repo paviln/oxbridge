@@ -1,7 +1,7 @@
+import {Request, Response} from 'express';
 import Registration, {IRegistration} from '../models/registration.js';
 import Team, {ITeam} from '../models/team.js';
 import Event, {IEvent} from '../models/event.js';
-import {Request, Response} from 'express';
 
 // Create and Save a new Registration
 const create = async (req: Request, res: Response) => {
