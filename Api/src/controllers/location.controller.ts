@@ -1,72 +1,45 @@
-const LocationRegistration = require('../models/locationRegistration.js');
-const EventRegistration = require('../models/eventRegistration.js')
-const Ship = require('../models/ship.js');
-const User = require('../models/user.js');
-const Event = require('../models/event.js');
-const RacePoint = require('../models/racePoint.js');
-const Auth = require('./authentication.controller.js');
-
+import {Request, Response} from 'express';
+import Location from '../models/location';
+import User from '../models/user';
+import Event from '../models/event';
+import RacePoint from '../models/point';
 
 // Create and Save a new locationRegistration
-exports.create = (req, res) => {
+const create = (req: Request, res: Response) => {
+  // Creating the Location
+  const locationRegistration = new Location(req.body);
 
-    // Checking if authorized 
-    Auth.Authorize(req, res, "user", function (err) {
+  /*     // Checking if eventReg exists
+    Event.findOne({ _id: registration.eventRegId }, function (err, eventReg) {
         if (err)
-            return err;
+            return callback(res.status(500).send({ message: err.message ||
+            "Some error occurred while retriving event eventRegistration" }));
+        if (!eventReg)
+            return callback(res.status(404).send({ message:
+            "Event with id " + registration.eventRegId + " was not found" }));
 
-        // Creating the LocationRegistration
-        var locationRegistration = new LocationRegistration(req.body);
-        module.exports.createLocationRegistration(locationRegistration, res, function (err, locationReg) {
-            if (err)
-                return err;
+        return callback();
+    }); */
 
-            return res.status(201).json(locationReg);
-        });
-    });
+  locationRegistration.save((err) => {
+    if (err) {
+      return res.send(err);
+    }
+  },
+  );
+
+  return res.status(201).json(locationRegistration);
 };
 
-// Checks that all foreignkeys are valid. Creates and save a new LocationRegistration. Returns response
-exports.createLocationRegistration = (newLocationRegistration, res, callback) => {
-    validateForeignKeys(newLocationRegistration, res, function (err) {
-        if (err)
-            return callback(err);
-
-        // Finding next regId
-        newLocationRegistration.locationTime.setHours(newLocationRegistration.locationTime.getHours()+2); 
-        CheckRacePoint(newLocationRegistration, res, function (updatedRegistration) {
-            if (updatedRegistration) {
-                newLocationRegistration = updatedRegistration
-
-
-                LocationRegistration.findOne({}).sort('-regId').exec(function (err, lastRegistration) {
-                    if (err)
-                        return callback(res.status(500).send({ message: err.message || "Some error occurred while retriving locationRegistrations" }));
-                    if (lastRegistration)
-                        newLocationRegistration.regId = lastRegistration.regId + 1;
-                    else
-                        newLocationRegistration.regId = 1;
-
-                    newLocationRegistration.save(function (err) {
-                        if (err)
-                            return callback(res.send(err));
-                        return callback(null, newLocationRegistration);
-                    });
-                });
-            }
-        });
-    })
-};
-
-//Updates racePoint number, if the ship has reached new racePoint and calculates the racescore
-function CheckRacePoint(registration, res, callback) {
-    EventRegistration.findOne({ eventRegId: registration.eventRegId }, { _id: 0, __v: 0 }, function (err, eventRegistration) {
+/* //Updates racePoint number, if the ship has reached new racePoint and calculates the racescore
+function CheckRacePoint(registration: IEvent, res: any, callback: any) {
+    Event.findOne({ _id: registration.id }, (err: any, eventRegistration: IEvent) => {
         if (err)
             return callback(res.status(500).send({ message: err.message || "Some error occurred while retriving eventRegistrations" }));
 
         //Checks which racepoint the ship has reached last
         var nextRacePointNumber = 2;
-        LocationRegistration.findOne({ eventRegId: registration.eventRegId }, { _id: 0, __v: 0 }, { sort: { 'locationTime': -1 } }, function (err, locationRegistration) {
+        Location.findOne({ _id: registration.id }, { sort: { 'locationTime': -1 } }, (err, locationRegistration) => {
             if (err)
                 return callback(res.status(500).send({ message: err.message || "Some error occurred while retriving locationRegistrations" }));
 
@@ -147,8 +120,8 @@ function CheckRacePoint(registration, res, callback) {
             }
         });
     });
-}
-
+} */
+/*
 //Finds the ships distance to the racepoint
 function FindDistance(registration, racePoint, callback) {
     var checkPoint1 = {};
@@ -190,8 +163,8 @@ function CalculateDistance(first, second) {
 
 //Retrieve the latest locationRegistrations on all ships in specific event
 var pending = 0
-exports.getLive = (req, res) => {
-    EventRegistration.find({ eventId: req.params.eventId }, { _id: 0, __v: 0 }, function (err, eventRegistrations) {
+const getLive = (req: Request, res: Response) => {
+    Event.find({ _id: req.params.eventId }, (err, eventRegistrations) => {
         if (err) {
             return res.status(500).send({ message: err.message || "Some error occurred while retriving eventRegistrations" });
         }
@@ -200,7 +173,7 @@ exports.getLive = (req, res) => {
         eventRegistrations.forEach(eventRegistration => {
             pending++
 
-            LocationRegistration.find({ eventRegId: eventRegistration.eventRegId }, { _id: 0, __v: 0 }, { sort: { 'locationTime': -1 }, limit: 20 }, function (err, locationRegistration) {
+            Location.find({ eventRegId: eventRegistration.eventRegId }, { _id: 0, __v: 0 }, { sort: { 'locationTime': -1 }, limit: 20 }, function (err, locationRegistration) {
                 pending--;
                 if (err) {
                     return res.status(500).send({ message: err.message || "Some error occurred while retriving locationRegistrations" });
@@ -228,19 +201,19 @@ exports.getLive = (req, res) => {
             });
         });
     });
-};
+}; */
 
-//Retrive scoreboard from event
-exports.getScoreboard = (req, res) => {
+/* //Retrive scoreboard from event
+const getScoreboard = (req:Request, res: Response) => {
     var pending = 0;
-    EventRegistration.find({ eventId: req.params.eventId }, { _id: 0, __v: 0 }, function (err, eventRegistrations) {
+    Event.find({ _id: req.params.eventId }, (err, eventRegistrations) => {
         if (err)
             return res.status(500).send({ message: err.message || "Some error occurred while retriving eventRegistrations" })
         if (eventRegistrations.length !== 0) {
             var scores = [];
             eventRegistrations.forEach(eventReg => {
                 pending++;
-                LocationRegistration.find({ eventRegId: eventReg.eventRegId }, { _id: 0, __v: 0 }, { sort: { 'locationTime': -1 }, limit: 1 }, function (err, locationRegistration) {
+                Location.find({ eventRegId: eventReg.eventRegId }, { _id: 0, __v: 0 }, { sort: { 'locationTime': -1 }, limit: 1 }, function (err, locationRegistration) {
                     if (err)
                         return res.status(500).send({ message: err.message || "Some error occurred while retriving locationRegistrations" });
                     if (locationRegistration.length !== 0) {
@@ -284,12 +257,12 @@ exports.getScoreboard = (req, res) => {
         else
             return res.status(200).send({});
     })
-}
+} */
 
 
-//Retrieve all locationRegistrations from an event
-exports.getReplay = (req, res) => {
-    EventRegistration.find({ eventId: req.params.eventId }, { _id: 0, __v: 0 }, function (err, eventRegistrations) {
+/* //Retrieve all locationRegistrations from an event
+const getReplay = (req: Request, res: Response) => {
+    Event.find({ _id: req.params.eventId }, (err, eventRegistrations) => {
         if (err) {
             return res.status(500).send({ message: err.message || "Some error occurred while retriving eventRegistrations" })
         }
@@ -298,13 +271,13 @@ exports.getReplay = (req, res) => {
             var shipLocations = [];
             eventRegistrations.forEach(eventRegistration => {
                 pending++
-                LocationRegistration.find({ eventRegId: eventRegistration.eventRegId }, { _id: 0, __v: 0 }, { sort: { 'locationTime': 1 } }, function (err, locationRegistrations) {
+                Location.find({ _id: eventRegistration.id }, { sort: { 'locationTime': 1 } }, (err, locationRegistrations) => {
                     pending--
                     if (err)
                         return res.status(500).send({ message: err.message || "Some error occurred while retriving registrations" })
-                    if (locationRegistrations) {
+                    if (locationRegistrations) shipLocation{
                         var shipLocation = { "locationsRegistrations": locationRegistrations, "color": eventRegistration.trackColor, "shipId": eventRegistration.shipId, "teamName": eventRegistration.teamName }
-                        shipLocations.push(shipLocation)
+                        shipLocations.push()
                     }
                     if (pending === 0) {
                         return res.status(200).send(shipLocations)
@@ -315,37 +288,23 @@ exports.getReplay = (req, res) => {
             return res.status(200).send({})
         }
     });
+}; */
+
+// Deleting all locationRegistration with an given eventRegId
+const deleteFromEventRegId = (req: Request, res: Response) => {
+  // Finding and deleting the locationRegistrations with the given eventRegId
+  Location.deleteMany({_id: req.params.eventId}, (err: any) => {
+    if (err) {
+      return res.status(500).send({
+        message: 'Error deleting locationRegistrations with eventRegId ' +
+        req.params.regId});
+    }
+
+    res.status(202);
+  });
 };
 
-//Deleting all locationRegistration with an given eventRegId
-exports.deleteFromEventRegId = (req, res) => {
-
-    // Checking if authorized 
-    Auth.Authorize(req, res, "user", function (err) {
-        if (err)
-            return err;
-
-        // Finding and deleting the locationRegistrations with the given eventRegId
-        LocationRegistration.deleteMany({ eventRegId: req.params.eventId }, function (err, locationRegistrations) {
-            if (err)
-                return res.status(500).send({ message: "Error deleting locationRegistrations with eventRegId " + req.params.regId });
-            if (!locationRegistrations)
-                return res.status(404).send({ message: "LocationRegistrations not found with eventRegId " + req.params.regId });
-
-            res.status(202).json(locationRegistrations);
-        });
-    });
+export default {
+  create,
+  deleteFromEventRegId,
 };
-
-function validateForeignKeys(registration, res, callback) {
-
-    // Checking if eventReg exists
-    EventRegistration.findOne({ eventRegId: registration.eventRegId }, function (err, eventReg) {
-        if (err)
-            return callback(res.status(500).send({ message: err.message || "Some error occurred while retriving event eventRegistration" }));
-        if (!eventReg)
-            return callback(res.status(404).send({ message: "EventRegistration with id " + registration.eventRegId + " was not found" }));
-
-        return callback();
-    });
-}
