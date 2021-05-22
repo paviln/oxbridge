@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { User } from './models/user';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
-
+import { environment } from './../environments/environment';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

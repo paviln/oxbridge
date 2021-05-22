@@ -7,7 +7,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { MyEvents } from '../models/my-events';
 import { EventRegistration } from '../models/event-registration';
 import { Participant } from '../models/participant';
-
+import { environment } from './../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
@@ -15,7 +15,7 @@ export class EventService {
 
   // private eventsUrl = 'https://oxbridgecloud.azurewebsites.net/events/';
 
-  private eventsUrl = 'http://localhost:3000/events/';
+  private eventsUrl = environment.baseApiUrl+'events/';
   
   constructor(private http: HttpClient, private cookieService:CookieService) { }
 

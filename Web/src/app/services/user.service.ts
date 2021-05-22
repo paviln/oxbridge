@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { User } from '../models/user';
 import * as decode from 'jwt-decode';
 import { CookieService } from 'ngx-cookie-service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class UserService {
 
   //private userUrl = 'https://oxbridgecloud.azurewebsites.net/users/'
 
-  private userUrl = 'http://localhost:3000/users/';
+  private userUrl = environment.baseApiUrl+'users/';
   constructor(private http: HttpClient, private cookieService: CookieService) { }
 
   /**

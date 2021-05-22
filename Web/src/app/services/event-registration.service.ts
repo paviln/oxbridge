@@ -5,6 +5,8 @@ import { EventRegistration } from '../models/event-registration';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Participant } from '../models/participant';
+import { environment } from './../../environments/environment';
+
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +14,8 @@ import { Participant } from '../models/participant';
 export class EventRegistrationService {
 
   //  private eventRegistrationUrl = 'https://oxbridgecloud.azurewebsites.net/eventRegistrations/';
-
-  private eventRegistrationUrl = 'http://localhost:3000/eventRegistrations/';
+  
+  private eventRegistrationUrl = environment.baseApiUrl+'eventRegistrations/';
 
   constructor(private cookieService: CookieService, private http: HttpClient) { }
 
@@ -23,6 +25,7 @@ export class EventRegistrationService {
    * @param teamName 
    * @param eventCode 
    */
+  
   public SignUpForEvent(shipId:number, teamName:string, eventCode:string): Observable<EventRegistration> {
     let user = JSON.parse(this.cookieService.get('user'));
     const httpOptions = {
