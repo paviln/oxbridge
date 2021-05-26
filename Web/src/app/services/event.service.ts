@@ -13,9 +13,7 @@ import { environment } from './../../environments/environment';
 })
 export class EventService {
 
-  // private eventsUrl = 'https://oxbridgecloud.azurewebsites.net/events/';
-
-  private eventsUrl = environment.baseApiUrl+'events/';
+  private eventUrl = environment.baseApiUrl + 'event/';
   
   constructor(private http: HttpClient, private cookieService:CookieService) { }
 
@@ -23,7 +21,7 @@ export class EventService {
    * Sends a http get event to the backend, in order to retrieve all events
    */
   public getEvents(): Observable<Event[]> {
-    return this.http.get<Event[]>(this.eventsUrl)
+    return this.http.get<Event[]>(this.eventUrl)
       .pipe(
         catchError(this.handleError<Event[]>('getEvents', []))
       );
@@ -34,7 +32,7 @@ export class EventService {
    * @param eventId - The id of the event
    */
   public getEvent(eventId:Number): Observable<Event> {
-    return this.http.get<Event>(this.eventsUrl+eventId)
+    return this.http.get<Event>(this.eventUrl+eventId)
       .pipe(map(event => { return event}));
   }
 
@@ -50,7 +48,7 @@ export class EventService {
         'x-access-token': user.token
       })
     }
-    return this.http.get<MyEvents[]>(this.eventsUrl+"myEvents/findFromUsername", httpOptions)
+    return this.http.get<MyEvents[]>(this.eventUrl+"myEvents/findFromUsername", httpOptions)
       .pipe(map(events => { return events }));
   }
 
@@ -70,7 +68,7 @@ export class EventService {
     event.eventStart = event.eventStart+"T"+event.eventStartTime+":00.000+00:00";
     event.eventEnd = event.eventEnd+"T"+event.eventEndTime+":00.000+00:00";
 
-    return this.http.post<Event>(this.eventsUrl, event, httpOptions).pipe(map(event => { return event }));
+    return this.http.post<Event>(this.eventUrl, event, httpOptions).pipe(map(event => { return event }));
   }
 
   /**
@@ -86,7 +84,7 @@ export class EventService {
         'x-access-token': user.token
       })
     }
-    return this.http.put(this.eventsUrl+eventId, event, httpOptions).pipe(map(event => {return event}));
+    return this.http.put(this.eventUrl+eventId, event, httpOptions).pipe(map(event => {return event}));
   }
 
   /**
@@ -101,7 +99,7 @@ export class EventService {
         'x-access-token': user.token
       })
     }
-    return this.http.delete(this.eventsUrl+eventId, httpOptions).pipe(map(event => {return event}));
+    return this.http.delete(this.eventUrl+eventId, httpOptions).pipe(map(event => {return event}));
   }
 
   /**
@@ -109,7 +107,7 @@ export class EventService {
    * @param eventId - The id of the event
    */
   public hasRoute(eventId: Number): Observable<boolean>{
-    return this.http.get<boolean>(this.eventsUrl+"hasRoute/"+eventId).pipe(map(res => { return res }))
+    return this.http.get<boolean>(this.eventUrl+"hasRoute/"+eventId).pipe(map(res => { return res }))
   }
 
   /**
@@ -126,7 +124,7 @@ export class EventService {
     }
     let dateTimeNow = new Date(Date.now());
     dateTimeNow.setHours(dateTimeNow.getHours()+2);
-    return this.http.put<Event>(this.eventsUrl+"startEvent/"+eventId, {actualEventStart: dateTimeNow.toUTCString()}, httpOptions).pipe(map(event => { return event }));
+    return this.http.put<Event>(this.eventUrl+"startEvent/"+eventId, {actualEventStart: dateTimeNow.toUTCString()}, httpOptions).pipe(map(event => { return event }));
   }
 
   /**
@@ -141,7 +139,7 @@ export class EventService {
         'x-access-token': user.token
       })
     }
-    return this.http.get<Event>(this.eventsUrl+"stopEvent/"+eventId, httpOptions).pipe(map(event => {return event}));
+    return this.http.get<Event>(this.eventUrl+"stopEvent/"+eventId, httpOptions).pipe(map(event => {return event}));
   }
 
   /**

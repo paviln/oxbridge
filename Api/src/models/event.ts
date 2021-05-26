@@ -7,7 +7,7 @@ export interface IEvent extends Document {
   city: string,
   eventCode: string,
   actualEventStart: Date,
-  isLive: boolean
+  isLive: boolean,
 }
 
 const EventSchema: Schema = new Schema({

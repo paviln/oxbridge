@@ -1,22 +1,17 @@
-import mongoose, {Document, Schema} from 'mongoose';
+import Mongoose, {Document, Schema} from 'mongoose';
 
 export interface IRegistration extends Document {
-  teamId: mongoose.Types.ObjectId,
-  eventId: mongoose.Types.ObjectId
+  shipId: number,
+  eventId: number,
+  trackColor: string,
+  teamName: string,
 }
 
-const RegistrationSchema: Schema = new Schema({
-  teamId: {
-    type: Schema.Types.ObjectId,
-    ref: 'Team',
-    required: true,
-  },
-  eventId: {
-    type: Schema.Types.ObjectId,
-    ref: 'Event',
-    required: true,
-  },
+const RegistrationSchema = new Schema({
+  shipId: Number,
+  eventId: Number,
+  trackColor: String,
+  teamName: String,
 });
 
-export default mongoose.model<IRegistration>('Registration',
-    RegistrationSchema);
+export default Mongoose.model<IRegistration>('Registration', RegistrationSchema);

@@ -30,8 +30,6 @@ router.get('/stopEvent/:eventId', authorize, eventController.stopEvent);
 // Checks if event with given eventId has a route
 router.get('/hasRoute/:eventId', authorize, eventController.hasRoute);
 
-// Checks if event with given eventId has a route
-router.get('/events/hasRoute/:eventId', eventController.hasRoute);
 // Retrieve all events with participant
 router.get('/myEvents/findFromUsername',
     authorize, eventController.findFromUsername);

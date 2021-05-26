@@ -1,122 +1,75 @@
 import {Request, Response} from 'express';
+import bcrypt from 'bcrypt';
 import Registration, {IRegistration} from '../models/registration.js';
 import Team, {ITeam} from '../models/team.js';
-import Event, {IEvent} from '../models/event.js';
-import strictTransportSecurity from 'helmet/dist/middlewares/strict-transport-security';
+import Event from '../models/event.js';
+import User from '../models/user.js';
 
-const nodemailer = require("nodemailer");
-//const transporter = require("transporter");
 // Create and Save a new Registration
 const create = async (req: Request, res: Response) => {
-  await Team.findById(req.body.teamId, (err: any, team: ITeam) => {
-    if (err || team) {
-      return res.status(404);
-    }
-  });
+  const team = await Team.findById(req.body.teamId);
+  if (!team) throw new Error('No team found with given id.');
 
-  await Event.findById(req.body.eventId, (err: any, event: IEvent) => {
-    if (err || event) {
-      return res.status(404);
-    }
-  });
+  const event = await Event.findById(req.body.eventId);
+  if (!event) throw new Error('No event found with given id.');
 
-  await Registration.create(req.body, (err: any) => {
-    if (err) {
-      return res.status(404);
-    }
-  });
-  
-  
-  return res.status(201);
+  const result = await Registration.create(req.body);
+
+  return res.status(201).json(result);
 };
 
-//OAUTH Stuff and Nodemailer //
-
-
-let transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 465,
-  secure: true,
-  auth: {
-      type: 'OAuth2',
-      user: 'user@example.com',
-      accessToken: 'ya29.Xx_XX0xxxxx-xX0X0XxXXxXxXXXxX0x'
-  }
-});
-
 // Retrieve and return all Registrations from the database.
-const findAll = (req: Request, res: Response) => {
+const findAll = async (req: Request, res: Response) => {
   // Finding all the registrations in the db
-  Registration.find({}, (err, registrations) => {
-    if (err) {
-      return res.status(500).send({message: err.message ||
-        'Some error occurred while retriving Registrations'});
-    }
-    res.status(200).json(registrations);
-  });
+  const registrations = await Registration.find({});
+
+  res.status(200).json(registrations);
+};
+
+// Checks that all foreignkeys are valid.
+const createRegistration = async (newRegistration: any) => {
+  await validateForeignKeys(newRegistration);
+
+  return await newRegistration.save();
 };
 
 // Retrieve all registrations where the given user is a participant
-const findEventRegFromEmail = (req: Request, res: Response) => {
-  // Finding team by email in the token
-  Team.find({email: req.body.email}, (err, teams) => {
-    if (err) {
-      return res.status(500).send({message: 'Error retrieving teams'});
-    }
+const findEventRegFromEmail = async (req: Request, res: Response) => {
+  let registrations: IRegistration[] = [];
+  // Finding teams by email in the token
+  const teams = await Team.find({email: req.body.emailUsername});
 
-    teams.forEach((team) => {
-      const filter = {
-        _id: req.params.eventId,
-        teamId: team._id,
-      };
-      Registration.find(filter, (err: any, registration: IRegistration) => {
-        if (err) {
-          return res.status(500).send({
-            message: 'Error retrieving registrations ',
-          });
-        }
-        if (registration) {
-          return res.status(200).send(registration);
-        }
-      });
-    });
+  teams.forEach(async (team) => {
+    const filter = {
+      _id: req.params.eventId,
+      teamId: team._id,
+    };
+    registrations = registrations.concat(await Registration.find(filter));
   });
+
+  return res.status(200).send(registrations);
 };
 
-/* //Creating an registration
-const signUp = (req: Request, res: Response) => {
+// Creating an registration
+const signUp = async (req: Request, res: Response) => {
+// Checks that the eventCode is correct
+  const event = await Event.findOne({eventCode: req.body.eventCode});
+  if (!event) throw new Error('Wrong eventCode');
 
-//Checks that the eventCode is correct
-    Event.findOne({ eventCode: req.body.eventCode }, (err, event) => {
-        if (err)
-            return res.status(500).send({ message: "error retrieving events" });
-        if (!event)
-            return res.status(404).send({ message: "Wrong eventCode" });
+  // Checks that the team isn't already assigned to the event
+  const filter = {teamId: req.body.teamId, eventId: event._id};
+  const registration = await Registration.findOne(filter);
+  if (registration) throw new Error('Team already registered to this event.');
 
-        if (event) {
-            //Checks that the team isn't already assigned to the event
-            Registration.findOne({ teamId: req.body.teamId, eventId: event._id }, (err: any, registration: IRegistration) => {
-                if (err)
-                    return res.status(500).send({ message: "error retreiving registrations" });
 
-                if (registration)
-                    return res.status(409).send({ message: "team already registered to this event" })
+  if (!registration) {
+    // Creating the registration
+    const createdRegistration = new Registration(req.body);
+    createRegistration(createdRegistration);
 
-                if (!registration) {
-
-                    // Creating the registration
-                    var registration = new Registration(req.body);
-                    module.exports.createRegistration(registration, res, function (err, registration) {
-                        if (err)
-                            return err;
-
-                        return res.status(201).json(registration);
-                    });
-                }
-            });
-        }
-    });
-} */
+    return res.status(201).json(createdRegistration);
+  }
+};
 
 // Retrieve all participants of the given event
 const getParticipants = (req: Request, res: Response) => {
@@ -131,7 +84,7 @@ const getParticipants = (req: Request, res: Response) => {
 
     if (registrations.length > 0) {
       registrations.forEach((registration) => {
-        Team.findOne({_id: registration.teamId}, (err: any, team: ITeam) => {
+        Team.findOne({_id: registration._id}, (err: any, team: ITeam) => {
           if (err) {
             return res.status(500).send({message: 'error retrieving team'});
           }
@@ -146,80 +99,90 @@ const getParticipants = (req: Request, res: Response) => {
   });
 };
 
-/* //Creating an registration
-const addParticipant = (req: Request, res: Response) => {
-    //Creates a user if no user corresponding to the given emailUsername found
-    User.findOne({ emailUsername: req.body.emailUsername }, (err, user) => {
-        if (err)
-            return res.status(500).send({ message: "error retrieving user" });
-        if (!user) {
+// Creating an registration
+const addParticipant = async (req: Request, res: Response) => {
+  // Creates a user if no user corresponding to the given emailUsername found
+  const user = await User.findOne({emailUsername: req.body.emailUsername});
+  if (user) throw new Error('User allready exists.');
 
-            var hashedPassword = bcrypt.hashSync("1234", 10);
-            var newUser = new User({ "emailUsername": req.body.emailUsername, "firstname": req.body.firstname, "lastname": req.body.lastname, "password": hashedPassword, "role": "user" });
-
-            newUser.save(function (err) {
-                if (err)
-                    return res.send(err);
-            });
-        }
-
-        //Creating a team if a team with the given name and owned by the given user, doesn't exist
-        Team.findOne({ emailUsername: req.body.emailUsername, name: req.body.teamName }, { _id: 0, __v: 0 }, function (err, team) {
-            if (err)
-                return res.status(500).send({ message: "error retrieving team" });
-            if (!team) {
-
-                var newTeam = new Team({ "name": req.body.teamName, "emailUsername":req.body.emailUsername });
-
-                Team.findOne({}).sort('-teamId').exec(function (err, lastTeam) {
-                    if (err)
-                        return res.status(500).send({ message: err.message || "Some error occurred while retriving teams" });
-                    if (lastTeam)
-                        newTeam.teamId = lastTeam.teamId + 1;
-                    else
-                        newTeam.teamId = 1;
-
-                    newTeam.save(function (err, savedTeam) {
-                        if (err)
-                            return res.send(err);
-                        var newRegistration = new Registration({"eventId": req.body.eventId, "teamId": savedTeam.teamId, "trackColor": "Yellow", "teamName":req.body.teamName});
-                        createRegistration(newRegistration, res);
-                    });
-                });
-            }
-            else
-        {
-            var newRegistration = new Registration({"eventId": req.body.eventId, "teamId": team.teamId, "trackColor": "Yellow", "teamName":req.body.teamName})
-            createRegistration(newRegistration, res);
-            }
-        })
-    });
-}
- */
-// Delete an registration with the specified eventRegId
-const remove = (req: Request, res: Response) => {
-  // Finding and deleting the registration with the given regId
-  const filter = {eventRegId: req.params.eventRegId};
-  Registration.findOneAndDelete(filter, null, (err: any,
-      registration: IRegistration | null) => {
-    if (err) {
-      return res.status(500).send({
-        message: 'Error deleting registration with eventRegId ' +
-        req.params.eventRegId});
-    }
-    if (!registration) {
-      return res.status(404).send({
-        message: 'Registration not found with eventRegId ' +
-        req.params.eventRegId});
-    }
-    res.status(202).json(registration);
+  const hashedPassword = bcrypt.hashSync('1234', 10);
+  const newUser = new User({
+    'email': req.body.emailUsername,
+    'firstname': req.body.firstname,
+    'lastname': req.body.lastname,
+    'password': hashedPassword,
+    'role': 'user',
   });
+
+  newUser.save();
+
+  // Creating a team if a team with the given
+  // name and owned by the given user, doesn't exist
+  const team = await Team.findOne({
+    email: req.body.emailUsername,
+    name: req.body.teamName},
+  );
+
+  if (!team) {
+    const newTeam = new Team({
+      'name': req.body.teamName,
+      'email': req.body.emailUsername,
+    });
+    newTeam.save(function(err, savedTeam) {
+      if (err) {
+        return res.send(err);
+      }
+      const newRegistration = new Registration({
+        'eventId': req.body.eventId,
+        'teamId': savedTeam._id,
+        'trackColor': 'Yellow',
+        'teamName': req.body.teamName,
+      });
+      createRegistration(newRegistration);
+    });
+  } else {
+    const newRegistration = new Registration({
+      'eventId': req.body.eventId,
+      'teamId': team._id,
+      'trackColor': 'Yellow',
+      'teamName': req.body.teamName,
+    });
+    createRegistration(newRegistration);
+  }
+};
+
+// Delete an registration with the specified eventRegId
+const remove = async (req: Request, res: Response) => {
+  // Finding and deleting the registration with the given regId
+  const filter = {_id: req.params.eventRegId};
+  const registration = await Registration.findOneAndDelete(filter, null);
+  if (!registration) {
+    throw new Error('Registration not found with eventRegId ' +
+    req.params.eventRegId);
+  }
+  res.status(202).json(registration);
+};
+
+// Validator for all registrations foreignkeys
+const validateForeignKeys = async (registration: any) => {
+  // Checking if team exists
+  const team = await Team.findOne({_id: registration.shipId});
+  if (!team) {
+    throw new Error('Ship with id ' + registration.shipId + ' was not found');
+  }
+  // Checking if event exists
+  const event = await Event.findOne({eventId: registration.eventId});
+  if (!event) {
+    throw new Error('Race with id ' + registration.eventId + ' was not found.');
+  }
 };
 
 export default {
   create,
   findAll,
   findEventRegFromEmail,
+  signUp,
   getParticipants,
+  addParticipant,
   remove,
 };

@@ -5,14 +5,12 @@ import pointController from '../controllers/point.controller';
 const router = express.Router();
 
 // Retrieve start and finish racepoints from an specific event
-router.get('/racePoints/findStartAndFinish/:eventId',
-    pointController.findStartAndFinish);
+router.get('/findStartAndFinish/:eventId', pointController.findStartAndFinish);
 
 // Retrieve all racepoints from an specific event
-router.get('/racepoints/fromEventId/:eventId',
-    pointController.findAllEventPoints);
+router.get('/fromEventId/:eventId', pointController.findAllEventPoints);
 
 // Creates a new route of racepoints for an event
-router.post('/racepoints/createRoute/:eventId', pointController.createRoute);
+router.post('/createRoute/:eventId', pointController.createRoute);
 
 export default router;

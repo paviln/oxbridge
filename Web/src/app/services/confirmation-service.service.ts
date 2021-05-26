@@ -10,8 +10,7 @@ import { environment } from './../../environments/environment';
 })
 export class ConfirmationServiceService {
 
-
-  private userUrl = environment.baseApiUrl+'Users/';
+  private userUrl = environment.baseApiUrl + 'user/';
   
   constructor(private cookieService: CookieService, private http: HttpClient) { }
   /**
