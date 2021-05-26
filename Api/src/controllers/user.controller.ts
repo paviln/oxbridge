@@ -79,14 +79,15 @@ const register = async (req: Request, res: Response) => {
 // Check login info and return login status
 const login = async (req: Request, res: Response) => {
   // Find the user and validate the password
-  const filter = {email: req.body.emailUsername};
+  const filter = {emailUsername: req.body.emailUsername};
   const user: IUser | null = await User.findOne(filter);
   if (!user) {
-    throw new NotFound('No user exist with provided credentials.');
+   // throw new NotFound('No user exist with provided credentials.');
+    return res.status(403).json('Username Incorrect');
   }
   const valid = bcrypt.compareSync(req.body.password, user.password);
   if (!valid) {
-    throw new Error('Invalid password.');
+    return res.status(401).send({ auth: false, token: null, message: "Invalid password" });    //throw new Error('Invalid password.');
   }
   // returning a token
   const token = jwt.sign(user.toJSON(),
