@@ -4,8 +4,7 @@ import Team, {ITeam} from '../models/team.js';
 import Event, {IEvent} from '../models/event.js';
 import strictTransportSecurity from 'helmet/dist/middlewares/strict-transport-security';
 
-const nodemailer = require("nodemailer");
-//const transporter = require("transporter");
+
 // Create and Save a new Registration
 const create = async (req: Request, res: Response) => {
   await Team.findById(req.body.teamId, (err: any, team: ITeam) => {
@@ -29,20 +28,6 @@ const create = async (req: Request, res: Response) => {
   
   return res.status(201);
 };
-
-//OAUTH Stuff and Nodemailer //
-
-
-let transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 465,
-  secure: true,
-  auth: {
-      type: 'OAuth2',
-      user: 'user@example.com',
-      accessToken: 'ya29.Xx_XX0xxxxx-xX0X0XxXXxXxXXXxX0x'
-  }
-});
 
 // Retrieve and return all Registrations from the database.
 const findAll = (req: Request, res: Response) => {

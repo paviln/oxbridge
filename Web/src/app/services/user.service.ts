@@ -14,7 +14,7 @@ export class UserService {
 
   //private userUrl = 'https://oxbridgecloud.azurewebsites.net/users/'
 
-  private userUrl = environment.baseApiUrl+'users/';
+  private userUrl = environment.baseApiUrl+'user/';
   constructor(private http: HttpClient, private cookieService: CookieService) { }
 
   /**

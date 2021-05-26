@@ -24,7 +24,7 @@ const findOne = async (req: Request, res: Response) => {
 const update = async (req: Request, res: Response) => {
   const user = new User(req.body);
   user.isAdmin = req.body.isAdmin;
-  const filter = {email: user.email};
+  const filter = {email: user.emailUsername};
   const updatedUser = await User.findOneAndUpdate(filter, user);
   if (!user) {
     throw new NotFound('User not found with id ' + req.params.email);
@@ -56,7 +56,7 @@ const registerAdmin = (req: Request, res: Response) => {
       return res.status(500)
           .send('There was a problem registrating the user');
     }
-    const payload = {id: user.email, isAdmin: true};
+    const payload = {id: user.emailUsername, isAdmin: true};
     const token = jwt.sign(payload, config.jwtSectetKey, {expiresIn: 86400});
     res.status(201).send({auth: true, token: token});
   });

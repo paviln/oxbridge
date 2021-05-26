@@ -15,7 +15,7 @@ export class EventService {
 
   // private eventsUrl = 'https://oxbridgecloud.azurewebsites.net/events/';
 
-  private eventsUrl = environment.baseApiUrl+'events/';
+  private eventsUrl = environment.baseApiUrl+'event/';
   
   constructor(private http: HttpClient, private cookieService:CookieService) { }
 
