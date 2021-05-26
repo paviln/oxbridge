@@ -21,6 +21,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { AdminEventComponent } from './components/admin-event/admin-event.component';
 import { RutePlannerComponent } from './components/rute-planner/rute-planner.component';
 import { LiveEventComponent } from './components/live-event/live-event.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { LiveEventComponent } from './components/live-event/live-event.component
     FormsModule,
     ReactiveFormsModule,
     ValidateEqualModule,
-    NgbModule
+    NgbModule,
+    FontAwesomeModule
   ],
   providers: [AuthGuard, CookieService],
   bootstrap: [AppComponent]
