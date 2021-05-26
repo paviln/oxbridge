@@ -1,9 +1,10 @@
-import dotenv from 'dotenv';
-
-dotenv.config({path: __dirname + '/../.env'});
-console.log(__dirname);
 const env = process.env;
+const errorMessage = 'The envirement variable ';
 
-export default {
-    jwtSectetKey: env.SECRET ?? ''
-}
+export const getJwtSecret = () => {
+  const config = env.jwtSectetKey;
+  if (config == null) {
+    throw new Error(errorMessage + 'jwt secret key is not defined.');
+  }
+  return config;
+};

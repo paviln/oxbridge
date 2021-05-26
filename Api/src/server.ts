@@ -1,11 +1,17 @@
 import bodyParser from 'body-parser';
 import express from 'express';
+import dotenv from 'dotenv';
 import cors from 'cors';
 import helmet from 'helmet';
 import mongoose from 'mongoose';
 import routes from './routes';
 
 const app = express();
+
+const env = dotenv.config({path: __dirname + '/.env'});
+if (env.error) {
+  throw new Error('Failed to load envirement config.');
+}
 
 app.use(cors());
 
