@@ -2,29 +2,19 @@ import mongoose, {Document, Schema} from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 export interface IUser extends Document {
-  firstname: string,
-  lastname: string,
-  email: string,
-  password: string,
-  isAdmin: boolean
+  firstname: String,
+  lastname: String,
+  emailUsername: String,
+  password: String,
+  role: String,
 }
 
 const UserSchema: Schema = new Schema({
   firstname: String,
   lastname: String,
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  isAdmin: {
-    type: Boolean,
-    default: false,
-  },
+  emailUsername: String,
+  password: String,
+  role: String,
 });
 
 UserSchema.pre<IUser>('save', async function(next) {
