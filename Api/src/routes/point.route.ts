@@ -1,16 +1,19 @@
 import express from 'express';
-import pointController from '../controllers/point.controller';
+import racePointController from '../controllers/racePoint.controller';
 
 // eslint-disable-next-line new-cap
 const router = express.Router();
 
 // Retrieve start and finish racepoints from an specific event
-router.get('/findStartAndFinish/:eventId', pointController.findStartAndFinish);
+router.get('/findStartAndFinish/:eventId',
+    racePointController.findStartAndFinish);
 
 // Retrieve all racepoints from an specific event
-router.get('/fromEventId/:eventId', pointController.findAllEventPoints);
+router.get('/fromEventId/:eventId',
+    racePointController.findAllEventRacePoints);
 
 // Creates a new route of racepoints for an event
-router.post('/createRoute/:eventId', pointController.createRoute);
+router.post('/createRoute/:eventId',
+    racePointController.createRoute);
 
 export default router;

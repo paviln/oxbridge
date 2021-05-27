@@ -1,22 +1,22 @@
 import express from 'express';
-import locationController from '../controllers/location.controller';
+import locationRegistrationController from '../controllers/locationRegistration';
 
 // eslint-disable-next-line new-cap
 const router = express.Router();
 
 // Create a new LocationRegistration
-router.post('/', locationController.create);
+router.post('/', locationRegistrationController.create);
 
 // Retrieve latest LocationRegistrations from specified event
-router.get('/getLive/:eventId', locationController.getLive);
+router.get('/getLive/:eventId', locationRegistrationController.getLive);
 
 // Retrieve all LocationRegistrations from specified event
-router.get('/getReplay/:eventId', locationController.getReplay);
+router.get('/getReplay/:eventId', locationRegistrationController.getReplay);
 
 // Retrieve scoreboard from specific event
-router.get('/getScoreboard/:eventId', locationController.getScoreboard);
+router.get('/getScoreboard/:eventId', locationRegistrationController.getScoreboard);
 
 // Delete all locationRegistrations with a given eventRegId
-router.delete('/deleteFromEventRegId/:eventId', locationController.deleteFromEventRegId);
+router.delete('/deleteFromEventRegId/:eventId', locationRegistrationController.deleteFromEventRegId);
 
 export default router;

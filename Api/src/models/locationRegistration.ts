@@ -1,6 +1,8 @@
 import Mongoose, {Document, Schema} from 'mongoose';
 
-export interface ILocationSchema extends Document {
+export interface ILocationRegistration extends Document {
+  regId: number,
+  eventRegId: number,
   locationTime: Date,
   longtitude: number,
   latitude: number,
@@ -9,7 +11,9 @@ export interface ILocationSchema extends Document {
   finishTime : Date,
 }
 
-const LocationSchema: Schema = new Schema({
+const LocationRegistrationSchema = new Schema({
+  regId: Number,
+  eventRegId: Number,
   locationTime: Date,
   longtitude: Number,
   latitude: Number,
@@ -18,4 +22,4 @@ const LocationSchema: Schema = new Schema({
   finishTime: Date,
 });
 
-export default Mongoose.model<ILocationSchema>('Location', LocationSchema);
+export default Mongoose.model<ILocationRegistration >('LocationRegistration', LocationRegistrationSchema);
