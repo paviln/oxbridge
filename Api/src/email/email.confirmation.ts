@@ -44,7 +44,7 @@ export default class EmailConfirmation{
             from: '"Tregatta/Oxbridge" <oxbridge.noreply@gmail.com>',
             to: user.emailUsername,
             subject: "Dear Participant, you are now registered for: " + event.name,
-            text: "Your event " + event.name + " is in " + event.city + ". The event starts at: " + event.eventStart + ".",
+            text: "Your event " + event.name + " : "+ event.eventCode + " is in " + event.city + ". The event starts at: " + event.eventStart + ".",
             headers: { 'x-myheader': 'Tregatta/Oxbridge Event' }
             
         }).catch((error: any) =>{

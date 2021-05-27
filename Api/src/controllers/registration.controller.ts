@@ -1,8 +1,10 @@
 import {Request, Response} from 'express';
-import Registration, {IRegistration} from '../models/registration.js';
-import Team, {ITeam} from '../models/team.js';
-import Event, {IEvent} from '../models/event.js';
+import Registration, {IRegistration} from '../models/registration';
+import Team, {ITeam} from '../models/team';
+import Event, {IEvent} from '../models/event';
+import User, {IUser} from '../models/user';
 import strictTransportSecurity from 'helmet/dist/middlewares/strict-transport-security';
+import EmailConfirmation from '../email/email.confirmation';
 
 
 // Create and Save a new Registration
@@ -18,14 +20,19 @@ const create = async (req: Request, res: Response) => {
       return res.status(404);
     }
   });
-
+  await User.findById(req.body.eventId, (err: any, user: IUser) => {
+    if (err || user) {
+      return res.status(404);
+    }
+  });
   await Registration.create(req.body, (err: any) => {
     if (err) {
       return res.status(404);
     }
   });
-  
-  
+
+  //Send IDs to EmailConfirmation to send a confirmation email to user email. 
+  new EmailConfirmation(req.body.eventId, req.body.emailId);
   return res.status(201);
 };
 

@@ -1,6 +1,8 @@
 import { CronJob } from 'cron';
-import nodemailer from 'nodemailer';
+import {transporter} from './email.index'
 
+import UserRepo from '../database/user.repo';
+import EventRepo from '../database/event.repo';
 /**
  * Class EmailReminder
  * That checks the database every hour for due dates of events
@@ -33,6 +35,19 @@ export default class EmailReminder{
     }
 
     async checktask(): Promise<void>{
+     // const user = await UserRepo.findById(this.emailId)
+     // const event = await EventRepo.findById(this.eventId);
+
+
+      const email = await transporter.sendMail({
+        from: '"Tregatta/Oxbridge" <oxbridge.noreply@gmail.com>',
+        to: "",
+        subject: "Do not forget your upcomming race event at Oxbridge",
+        text: "Your event starts at: ",
+        headers: {'x-myheader': 'Tregatta/Oxbridge Event'}
+
+      });
+
 
     }
 }
