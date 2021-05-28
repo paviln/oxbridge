@@ -16,10 +16,11 @@ router.get('/:shipId', shipController.findOne);
 // Retrieve all ships participating in the given event
 router.get('/fromEventId/:eventId', shipController.findFromEventId);
 
-// Retrieve all user teams
-router.get('/myShips/fromUsername', shipController.findTeams);
+//Retrieve all user ships
+router.get('/ships/myShips/fromUsername', shipController.findMyShips); 
 
-// Update a myShips
+// Update a ship
+router.put('/ships/:shipId', shipController.update); 
 
 // Delete a ship
 router.delete('/:shipId', shipController.remove);

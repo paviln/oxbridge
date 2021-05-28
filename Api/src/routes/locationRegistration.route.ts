@@ -1,5 +1,5 @@
 import express from 'express';
-import locationRegistrationController from '../controllers/locationRegistration';
+import locationRegistrationController from '../controllers/locationRegistration.controller';
 
 // eslint-disable-next-line new-cap
 const router = express.Router();

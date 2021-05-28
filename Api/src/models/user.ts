@@ -8,11 +8,11 @@ export enum Roles {
 }
 
 export interface IUser extends Document {
-  firstname: String,
-  lastname: String,
-  emailUsername: String,
-  password: String,
-  role: String,
+  firstname: string,
+  lastname: string,
+  emailUsername: string,
+  password: string,
+  role: string,
 }
 
 const UserSchema: Schema = new Schema({

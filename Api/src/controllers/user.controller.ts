@@ -1,92 +1,179 @@
-import jwt from 'jsonwebtoken';
+import { Request, Response } from 'express';
+import jwt from'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import {NotFound} from 'express-http-custom-error';
-import {Request, Response} from 'express';
-import User, {IUser, Roles} from '../models/user';
-import {getJwtSecret} from '../config/config';
+import {getJwtSecret} from'../config/config';
+import Authorize from '../controllers/authentication.controller';
+import User, { IUser } from '../models/user';
 
-// Retrieve all users
-const findAll = async (req: Request, res: Response) => {
-  const users: IUser[] = await User.find().exec();
-  res.status(200).json(users);
+// Retrieve and return all users from the database.
+const findAll = (req: Request, res: Response) => {
+
+    // Checking if authorized
+    Authorize(req, res, "admin", function (err: any) {
+        if (err)
+            return err;
+
+        // Finding all users
+        User.find({}, { _id: 0, __v: 0 }, null, function (err, users) {
+            if (err)
+                return res.status(500).send({ message: err.message || "Some error occurred while retriving users" });
+
+            res.status(200).json(users);
+        });
+    });
 };
 
-// Find a single user with the specified email
-const findOne = async (req: Request, res: Response) => {
-  const user = await User.findOne({email: req.params.email}).exec();
-  if (!user) {
-    throw new NotFound(null, 'No user with that email exists.');
-  }
-  res.status(200).json(user);
+// Find a single user with the specified emailUsername
+const findOne = (req: Request, res: Response) => {
+
+    // Checking if authorized 
+    Authorize(req, res, "user", function (err: any) {
+        if (err)
+            return err;
+
+        // Finding the user with the given userId
+        User.findOne({ emailUsername: req.params.emailUsername }, { _id: 0, __v: 0 }, null, function (err, user) {
+            if (err) 
+                return res.status(500).send({ message: "Error retrieving user with userName " + req.params.emailUsername });
+            if (!user)
+                return res.status(404).send({ message: "User not found with userName " + req.params.emailUsername });
+
+            res.status(200).send(user);
+        });
+    });
 };
 
-// Update a user with the specified email
-const update = async (req: Request, res: Response) => {
-  const user = new User(req.body);
-  user.role = req.body.role;
-  const filter = {email: user.email};
-  const updatedUser = await User.findOneAndUpdate(filter, user);
-  if (!user) {
-    throw new NotFound('User not found with id ' + req.params.email);
-  }
-  res.status(202).json(updatedUser);
+// Update a user with the specified emailUsername
+const update = (req: Request, res: Response) => {
+
+    // Checking if authorized 
+    Authorize(req, res, "user", function (err: any, decoded: any) {
+        if (err)
+            return err;
+
+        // Updating the user
+        var hashedPassword = bcrypt.hashSync(req.body.password, 10);
+        var newUser = new User(req.body);
+        newUser.password = hashedPassword;
+        newUser.role = decoded.role;
+
+        User.findOneAndUpdate({ emailUsername: newUser.emailUsername }, newUser, null, function (err, user) {
+            if (err)
+                res.send(err);
+            if (!user)
+                return res.status(404).send({ message: "User not found with id " + req.params.emailUsername });
+            
+            res.status(202).json(user);
+        });
+    });
 };
 
-// Delete a user with the specified email
-const remove = async (req: Request, res: Response) => {
-  const filter = {email: req.params.email};
-  const deletedUser: IUser | null = await User.findOneAndDelete(filter);
-  if (!deletedUser) throw new Error('No user found with email ' + filter);
+// Delete a user with the specified emailUsername
+const remove = (req: any, res: any) => {
 
-  res.status(202).json(deletedUser);
+    // Checking if authorized 
+    Authorize(req, res, "user", function (err: any) {
+        if (err)
+            return err;
+
+        // Deleting the user with the given userId
+        User.findOneAndDelete({ emailUsername: req.params.emailUsername }, null, function (err, user) {
+            if (err)
+                res.send(err);
+            if (!user)
+                return res.status(404).send({ message: "User not found with id " + req.params.emailUsername });
+            
+            res.status(202).json(user);
+        });
+    });
 };
 
 // Register a new admin user and return token
-const registerAdmin = async (req: Request, res: Response) => {
-  // Creating the new user
-  const user = new User(req.body);
-  user.role = Roles.Admin;
+const registerAdmin = (req: Request, res: Response) => {
 
-  const savedUser = await user.save();
-  if (!savedUser) throw new Error('User not found.');
+    // Checking if authorized 
+    Authorize(req, res, "admin", function (err: any) {
+        if (err)
+            return err;
 
-  const payload = {id: user.email, isAdmin: true};
-  const token = jwt.sign(payload, getJwtSecret(), {expiresIn: 86400});
-  res.status(201).send({auth: true, token: token});
+        // Checking that no other user with that username exists
+        User.find({ emailUsername: req.body.emailUsername }, function (err, users) {
+            if (err)
+                return res.status(500).send({ message: err.message || "Some error occurred while retriving users" });
+
+            if (users)
+                return res.status(409).send({ message: "User with that username already exists" });
+
+            // Creating the new user
+            var hashedPassword = bcrypt.hashSync(req.body.password, 10);
+            var user = new User(req.body);
+            user.password = hashedPassword;
+            user.role = "admin";
+
+            user.save(function (err) {
+                if (err)
+                    return res.status(500).send("There was a problem registrating the user");
+
+                var token = jwt.sign({ id: user.emailUsername, role: "admin" }, getJwtSecret(), { expiresIn: 86400 });
+                res.status(201).send({ auth: true, token: token });
+            });
+        });
+    });
 };
 
 // Register a new user and return token
-const register = async (req: Request, res: Response) => {
-  // Creating the user
-  const newUser: IUser = new User(req.body);
-  const savedUser = await newUser.save();
-  if (!savedUser) throw new Error('Failed to save user.');
-  // returning a token
-  const token = jwt.sign(savedUser.toJSON(),
-      getJwtSecret(), {expiresIn: 86400});
-  res.status(201).send({auth: true, token: token});
+const register = (req: Request, res: Response) => {
+
+    // Checking that no user with that username exists
+    User.findOne({ emailUsername: req.body.emailUsername }, null, null, function (err, user) {
+        if (err)
+            return res.status(500).send({ message: err.message || "Some error occurred while retriving users" });
+
+        if (user)
+            return res.status(409).send({ message: "User with that username already exists" });
+
+        // Creating the user
+        var hashedPassword = bcrypt.hashSync(req.body.password, 10);
+        var user: IUser | null = new User(req.body);
+        user.password = hashedPassword;
+        user.role = "user";
+
+        user.save(function (err) {
+            if (err)
+                return res.status(500).send("There was a problem registrating the user");
+
+            // returning a token
+            var token = jwt.sign({ id: user.emailUsername, role: "user" }, getJwtSecret(), { expiresIn: 86400 });
+            res.status(201).send({ auth: true, token: token });
+        });
+    });
 };
 
 // Check login info and return login status
-const login = async (req: Request, res: Response) => {
-  // Find the user and validate the password
-  const filter = {email: req.body.email};
-  const user = await User.findOne(filter);
-  if (!user) throw new NotFound('No user exist with provided credentials.');
-  const valid = bcrypt.compareSync(req.body.password, user.password);
-  if (!valid) throw new Error('Invalid password.');
-  // returning a token
-  const token = jwt.sign(user.toJSON(),
-      getJwtSecret(), {expiresIn: 86400});
-  res.status(200).send({user, token});
+const login = (req: Request, res: Response) => {
+
+    // Find the user and validate the password
+    User.findOne({ emailUsername: req.body.emailUsername }, null, null, function (err, user) {
+        if (err)
+            return res.status(500).send('Error on the server');
+        if (!user)
+            return res.status(403).json('Username incorrect');
+
+        var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+        if (!passwordIsValid)
+            return res.status(401).send({ auth: false, token: null, message: "Invalid password" });
+
+        var token = jwt.sign({ id: user.emailUsername, role: user.role }, getJwtSecret(), { expiresIn: 86400 });
+        res.status(200).send({ emailUsername: user.emailUsername, firstname : user.firstname, lastname : user.lastname, auth: true, token: token });
+    });
 };
 
 export default {
-  findAll,
-  findOne,
-  update,
-  remove,
-  registerAdmin,
-  register,
-  login,
-};
+    findAll,
+    findOne,
+    update,
+    remove,
+    registerAdmin,
+    register,
+    login,
+}

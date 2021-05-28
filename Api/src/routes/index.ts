@@ -1,7 +1,8 @@
 import express, {Router} from 'express';
 import eventRoutes from './event.route';
-import locationRoutes from './location.route';
-import pointRoutes from './point.route';
+import eventRegistrationRoutes from './eventRegistration.route';
+import locationRegistrationRoutes from './locationRegistration.route';
+import pointRoutes from './locationRegistration.route';
 import shipRoutes from './ship.route';
 import userRoutes from './user.route';
 
@@ -9,8 +10,8 @@ import userRoutes from './user.route';
 const router: Router = express.Router();
 
 router.use('/events', eventRoutes);
-router.use('/eventRegistrations', registrationRoutes);
-router.use('/locationRegistrations', locationRoutes);
+router.use('/eventRegistrations', eventRegistrationRoutes);
+router.use('/locationRegistrations', locationRegistrationRoutes);
 router.use('/racePoints', pointRoutes);
 router.use('/ships', shipRoutes);
 router.use('/users', userRoutes);
