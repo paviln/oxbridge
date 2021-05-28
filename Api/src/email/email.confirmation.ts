@@ -1,4 +1,4 @@
-import Team, {ITeam} from '../models/team';
+
 import User, {IUser} from '../models/user';
 import {Request, Response} from 'express';
 import {Types} from "mongoose";

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 export const env = process.env.NODE_ENV;
 const errorMessage = 'The envirement variable ';
 export default {
@@ -6,13 +5,6 @@ export default {
 };
 export const getJwtSecret = () => {
   const config = process.env.jwtSectetKey;
-=======
-const env = process.env;
-const errorMessage = 'The envirement variable ';
-
-export const getJwtSecret = () => {
-  const config = env.jwtSectetKey;
->>>>>>> develop
   if (config == null) {
     throw new Error(errorMessage + 'jwt secret key is not defined.');
   }
