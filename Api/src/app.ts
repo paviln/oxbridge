@@ -10,8 +10,10 @@ import dotenv from 'dotenv';
 
 const app = express();
 
-dotenv.config({path: __dirname + '/.env'});
-console.log(process.env.NODE_ENV);
+const env = dotenv.config({path: __dirname + '/.env'});
+if (env.error) {
+  throw new Error('Failed to load envirement config.');
+}
 app.use(cors());
 
 // Parse body params and attache them to req.body.

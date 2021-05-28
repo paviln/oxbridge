@@ -12,6 +12,7 @@
     "start": "tsc && node dist/app.js"
   },
   "dependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/nodemailer": "^6.4.2",
     "azure-iothub": "^1.14.0",
     "bcryptjs": "^2.4.3",

@@ -32,7 +32,7 @@ namespace Oxbridge.App.Services
         {
             String target = Target.Authenticate;
 
-            String jsonData = "{\"emailUsername\": \"" + username + "\", \"password\": \"" + password + "\" }";
+            String jsonData = "{\"email\": \"" + username + "\", \"password\": \"" + password + "\" }";
             WebRequest request = WebRequest.Create(target);
             request.Method = "POST";
             request.ContentType = "application/json";

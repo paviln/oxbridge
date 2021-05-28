@@ -1,5 +1,5 @@
-import Registration, {IRegistration} from '../models/registration';
-import Team, {ITeam} from '../models/team';
+import EventRegistration, {IEventRegistration} from '../models/eventRegistration';
+import Ship, {IShip} from '../models/ship';
 import User, {IUser} from '../models/user';
 import {Request, Response} from 'express';
 //Inits//

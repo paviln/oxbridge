@@ -7,14 +7,14 @@ const router = express.Router();
 // Retrieve all Users
 router.get('/', userController.findAll);
 
-// Retrieve a single User with the given email
-router.get('/:email', userController.findOne);
+// Retrieve a single User with the given emailUsername
+router.get('/:userName', userController.findOne);
 
-// Update a User with the given email
-router.put('/:email', userController.update);
+// Update a User with the given emailUsername
+router.put('/:userName', userController.update);
 
-// Delete a User with the given email
-router.delete('/:email', userController.remove);
+// Delete a User with the given emailUsername
+router.delete('/:userName', userController.remove);
 
 // Register a new admin
 router.post('/registerAdmin', userController.registerAdmin);
