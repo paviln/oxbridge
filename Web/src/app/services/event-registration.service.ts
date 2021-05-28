@@ -12,10 +12,8 @@ import { environment } from './../../environments/environment';
   providedIn: 'root'
 })
 export class EventRegistrationService {
-
-  //  private eventRegistrationUrl = 'https://oxbridgecloud.azurewebsites.net/eventRegistrations/';
   
-  private eventRegistrationUrl = environment.baseApiUrl+'eventRegistrations/';
+  private eventRegistrationUrl = environment.baseApiUrl + 'registration/';
 
   constructor(private cookieService: CookieService, private http: HttpClient) { }
 

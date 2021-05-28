@@ -1,19 +1,19 @@
 import express, {Router} from 'express';
 import eventRoutes from './event.route';
-import registrationRoutes from './registration.route';
-import locationRoutes from './location.route';
-import pointRoutes from './point.route';
-import teamRoutes from './team.route';
+import eventRegistrationRoutes from './eventRegistration.route';
+import locationRegistrationRoutes from './locationRegistration.route';
+import pointRoutes from './locationRegistration.route';
+import shipRoutes from './ship.route';
 import userRoutes from './user.route';
 
 // eslint-disable-next-line new-cap
 const router: Router = express.Router();
 
-router.use('/event', eventRoutes);
-router.use('/registration', registrationRoutes);
-router.use('/location', locationRoutes);
-router.use('/point', pointRoutes);
-router.use('/team', teamRoutes);
-router.use('/user', userRoutes);
+router.use('/events', eventRoutes);
+router.use('/eventRegistrations', eventRegistrationRoutes);
+router.use('/locationRegistrations', locationRegistrationRoutes);
+router.use('/racePoints', pointRoutes);
+router.use('/ships', shipRoutes);
+router.use('/users', userRoutes);
 
 export default router;

@@ -1,6 +1,7 @@
 import mongoose, {Document, Schema} from 'mongoose';
 
 export interface IEvent extends Document {
+  eventId: number,
   name: string,
   eventStart: Date,
   eventEnd: Date,
@@ -8,10 +9,12 @@ export interface IEvent extends Document {
   eventCode: string,
   actualEventStart: Date,
   isLive: boolean,
-  checked: boolean
+  checked: boolean,
+  eventRegId: number
 }
 
 const EventSchema: Schema = new Schema({
+  eventId: Number,
   name: String,
   eventStart: Date,
   eventEnd: Date,
@@ -19,7 +22,7 @@ const EventSchema: Schema = new Schema({
   eventCode: String,
   actualEventStart: Date,
   isLive: Boolean,
-  checked: Boolean
+  eventRegId: Number,
 });
 
 export default mongoose.model<IEvent>('Event', EventSchema);

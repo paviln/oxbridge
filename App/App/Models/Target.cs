@@ -9,7 +9,7 @@ namespace Oxbridge.App.Models
         private const String StandardAdress = azure;
 
 
-        public const String Authenticate = StandardAdress + "users/login";
+        public const String Authenticate = StandardAdress + "user/login";
         public const String Events = StandardAdress + "event/";
         public const String EventsFromUsername = StandardAdress + "event/myevents/findfromusername";
         public const String EventRegistrations = StandardAdress + "eventRegistrations/findEventRegFromUsername/";

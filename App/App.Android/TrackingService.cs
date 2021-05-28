@@ -60,9 +60,8 @@ namespace Oxbridge.App.Droid
                 MessagingCenter.Send<string>("", "TrackingStopped");
                 isRunning = false;
             }
+
             return StartCommandResult.Sticky;
-
-
         }
 
         /// <summary>
