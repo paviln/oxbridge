@@ -67,4 +67,12 @@ export class UserService {
     }
     return this.http.put<User>(this.userUrl+user.emailUsername, newUser, httpOptions).pipe(map(user => { return user }));
   }
+
+  public forgotPassword(emailUsername: string){
+    return this.http.post<User>(this.userUrl+"/forgot-password",{emailUsername});
+  }
+
+  public resetPassword(token: string, password:string, confirmPassword:string){
+    return this.http.post<User>(this.userUrl+"/reset-password",{token,password,confirmPassword});
+  }
 }

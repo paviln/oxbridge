@@ -2,7 +2,7 @@ import Team, {ITeam} from '../models/team';
 import User, {IUser} from '../models/user';
 import {Request, Response} from 'express';
 import {Types} from "mongoose";
-import {transporter} from './email.index'
+import {transporter} from './index'
 
 import UserRepo from '../database/user.repo';
 import EventRepo from '../database/event.repo';

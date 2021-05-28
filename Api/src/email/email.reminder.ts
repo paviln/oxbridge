@@ -1,5 +1,5 @@
 import { CronJob } from 'cron';
-import {transporter} from './email.index'
+import {transporter} from './index'
 
 import UserRepo from '../database/user.repo';
 import EventRepo from '../database/event.repo';
@@ -38,7 +38,15 @@ export default class EmailReminder{
      // const user = await UserRepo.findById(this.emailId)
      // const event = await EventRepo.findById(this.eventId);
 
-
+      //Define min and max database of checking of events
+      const max = new Date();
+      const min = new Date();
+      min.setDate(min.getDate()-3);
+      
+      //Find the events that has not been checked
+      const nonCheckedEvents = await EventRepo.findCheckedEvent();
+      //add validation
+      
       const email = await transporter.sendMail({
         from: '"Tregatta/Oxbridge" <oxbridge.noreply@gmail.com>',
         to: "",
@@ -46,9 +54,9 @@ export default class EmailReminder{
         text: "Your event starts at: ",
         headers: {'x-myheader': 'Tregatta/Oxbridge Event'}
 
-      });
-
-
+      }).catch((error: any) =>{
+        console.error(error);
+    });
     }
 }
 
