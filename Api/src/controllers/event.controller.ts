@@ -1,35 +1,28 @@
 import Event, { IEvent } from '../models/event';
 import EventRegistration, { IEventRegistration } from '../models/eventRegistration';
 import Ship, { IShip } from '../models/ship';
-import Authorize from './authentication.controller';
 import RacePoint from '../models/racePoint';
 import { Request, Response } from 'express';
 
 // Create and Save a new Event
 const create = (req: Request, res: Response) => {
+  console.log(req.body);
+  var event = new Event(req.body);
 
-  //Checking if authorized 
-  Authorize(req, res, "admin", function (err: any) {
+  // Finding next eventId
+  Event.findOne({}).sort('-eventId').exec(function (err, lastEvent) {
     if (err)
-      return err;
-
-    var event = new Event(req.body);
-
-    // Finding next eventId
-    Event.findOne({}).sort('-eventId').exec(function (err, lastEvent) {
+      return res.status(500).send({ message: err.message || "Some error occurred while retriving events" });
+    if (lastEvent)
+      event.eventId = lastEvent.eventId + 1;
+    else
+      event.eventId = 1;
+    //  console.log(req.body);
+    // Saving the new Event in the DB
+    event.save(function (err) {
       if (err)
-        return res.status(500).send({ message: err.message || "Some error occurred while retriving events" });
-      if (lastEvent)
-        event.eventId = lastEvent.eventId + 1;
-      else
-        event.eventId = 1;
-
-      // Saving the new Event in the DB
-      event.save(function (err) {
-        if (err)
-          return res.send(err);
-        res.status(201).json(event);
-      });
+        return res.send(err);
+      res.status(201).json(event);
     });
   });
 };
@@ -58,56 +51,49 @@ const findAll = (req: Request, res: Response) => {
 
 //Get all events that the user is a participant of
 var pending = 0;
-const findFromUsername = (req: Request, res: Response) => {
-
-  // Checking if authorized 
-  Authorize(req, res, "all", function (err: any, decodedUser: any) {
+const findFromUsername = (req: any, res: Response) => {
+  // Finding all the ships the user owns
+  var events: any[] = [];
+  Ship.find({ emailUsername: req.user.id }, { _id: 0, __v: 0 }, null, function (err, ships) {
     if (err)
-      return err;
+      return res.status(500).send({ message: err.message || "Some error occurred while retriving ships" });
 
-    // Finding all the ships the user owns
-    var events: any[] = [];
-    Ship.find({ emailUsername: decodedUser.id }, { _id: 0, __v: 0 }, null, function (err, ships) {
-      if (err)
-        return res.status(500).send({ message: err.message || "Some error occurred while retriving ships" });
+    if (ships.length > 0) {
+      //Finding all eventRegistrations with a ship that the user owns 
+      ships.forEach(ship => {
+        EventRegistration.find({ shipId: ship.shipId }, { _id: 0, __v: 0 }, null, function (err, eventRegistrations) {
+          if (err)
+            return res.status(500).send({ message: err.message || "Some error occurred while retriving eventRegistrations" });
 
-      if (ships.length > 0) {
-        //Finding all eventRegistrations with a ship that the user owns 
-        ships.forEach(ship => {
-          EventRegistration.find({ shipId: ship.shipId }, { _id: 0, __v: 0 }, null, function (err, eventRegistrations) {
-            if (err)
-              return res.status(500).send({ message: err.message || "Some error occurred while retriving eventRegistrations" });
+          if (eventRegistrations) {
+            eventRegistrations.forEach((eventRegistration: IEventRegistration) => {
+              pending++;
+              Ship.findOne({ shipId: eventRegistration.shipId }, { _id: 0, __v: 0 }, null, function (err, ship) {
+                if (err)
+                  return res.status(500).send({ message: err.message || "Some error occurred while retriving the ship" });
 
-            if (eventRegistrations) {
-              eventRegistrations.forEach((eventRegistration: IEventRegistration) => {
-                pending++;
-                Ship.findOne({ shipId: eventRegistration.shipId }, { _id: 0, __v: 0 }, null, function (err, ship) {
-                  if (err)
-                    return res.status(500).send({ message: err.message || "Some error occurred while retriving the ship" });
+                if (ship) {
+                  Event.findOne({ eventId: eventRegistration.eventId }, { _id: 0, __v: 0 }, null, function (err, event) {
+                    pending--
+                    if (err)
+                      return res.status(500).send({ message: err.message || "Some error occurred while retriving the event" });
 
-                  if (ship) {
-                    Event.findOne({ eventId: eventRegistration.eventId }, { _id: 0, __v: 0 }, null, function (err, event) {
-                      pending--
-                      if (err)
-                        return res.status(500).send({ message: err.message || "Some error occurred while retriving the event" });
-
-                      if (event) {
-                        events.push({ "eventId": event.eventId, "name": event.name, "eventStart": event.eventStart, "eventEnd": event.eventEnd, "city": event.city, "eventRegId": eventRegistration.eventRegId, "shipName": ship.name, "teamName": eventRegistration.teamName, "isLive": event.isLive, "actualEventStart": event.actualEventStart });
-                      }
-                      if (pending == 0) {
-                        res.status(200).send(events);
-                      }
-                    });
-                  }
-                });
+                    if (event) {
+                      events.push({ "eventId": event.eventId, "name": event.name, "eventStart": event.eventStart, "eventEnd": event.eventEnd, "city": event.city, "eventRegId": eventRegistration.eventRegId, "shipName": ship.name, "teamName": eventRegistration.teamName, "isLive": event.isLive, "actualEventStart": event.actualEventStart });
+                    }
+                    if (pending == 0) {
+                      res.status(200).send(events);
+                    }
+                  });
+                }
               });
-            }
-          });
+            });
+          }
         });
-      } else {
-        res.status(200).send(events);
-      }
-    });
+      });
+    } else {
+      res.status(200).send(events);
+    }
   });
 };
 
@@ -125,92 +111,64 @@ const findOne = (req: Request, res: Response) => {
 
 //Finding and updating event with the given eventId
 const update = (req: Request, res: Response) => {
-
-  // Checking if authorized 
-  Authorize(req, res, "admin", function (err: any) {
+  var newEvent = req.body;
+  newEvent.eventId = req.params.eventId;
+  Event.updateOne({ eventId: +req.params.eventId }, newEvent, null, function (err, event) {
     if (err)
-      return err;
-
-    var newEvent = req.body;
-    newEvent.eventId = req.params.eventId;
-    Event.updateOne({ eventId: +req.params.eventId }, newEvent, null, function (err, event) {
-      if (err)
-        return res.status(500).send({ message: err.message || "Error updating bikeRackStation with stationId " + req.params.eventId });
-      if (!event)
-        return res.status(404).send({ message: "BikeRackStation not found with stationId " + req.params.eventId });
-      res.status(202).json(newEvent);
-    });
+      return res.status(500).send({ message: err.message || "Error updating bikeRackStation with stationId " + req.params.eventId });
+    if (!event)
+      return res.status(404).send({ message: "BikeRackStation not found with stationId " + req.params.eventId });
+    res.status(202).json(newEvent);
   });
 };
 
 //Changes event property "isLive" to true
 const startEvent = (req: Request, res: Response) => {
-
-  // Checking if authorized 
-  Authorize(req, res, "admin", function (err: any) {
+  var updatedEvent = { isLive: true, actualEventStart: req.body.actualEventStart }
+  Event.findOneAndUpdate({ eventId: +req.params.eventId }, updatedEvent, { new: true }, function (err, event) {
     if (err)
-      return err;
+      return res.status(500).send({ message: "Error updating event with eventId " + req.params.eventId });
+    if (!event)
+      return res.status(404).send({ message: "Event not found with eventId " + req.params.eventId });
 
-    var updatedEvent = { isLive: true, actualEventStart: req.body.actualEventStart }
-    Event.findOneAndUpdate({ eventId: +req.params.eventId }, updatedEvent, { new: true }, function (err, event) {
-      if (err)
-        return res.status(500).send({ message: "Error updating event with eventId " + req.params.eventId });
-      if (!event)
-        return res.status(404).send({ message: "Event not found with eventId " + req.params.eventId });
-
-      res.status(202).json(event);
-    });
+    res.status(202).json(event);
   });
 };
 
 //Changes event property "isLive" to false
 const stopEvent = (req: Request, res: Response) => {
-
-  // Checking if authorized 
-  Authorize(req, res, "admin", function (err: any) {
+  Event.findOneAndUpdate({ eventId: +req.params.eventId }, { isLive: false }, { new: true }, function (err, event) {
     if (err)
-      return err;
-
-    Event.findOneAndUpdate({ eventId: +req.params.eventId }, { isLive: false }, { new: true }, function (err, event) {
-      if (err)
-        return res.status(500).send({ message: "Error updating event with eventId " + req.params.eventId });
-      if (!event)
-        return res.status(404).send({ message: "Event not found with eventId " + req.params.eventId });
-      else
-        res.status(202).json(event);
-    })
+      return res.status(500).send({ message: "Error updating event with eventId " + req.params.eventId });
+    if (!event)
+      return res.status(404).send({ message: "Event not found with eventId " + req.params.eventId });
+    else
+      res.status(202).json(event);
   })
 }
 
 // Delete an event with the specified eventId in the request
 const remove = (req: Request, res: Response) => {
-
-  // Checking if authorized 
-  Authorize(req, res, "admin", function (err: any) {
+  // Finding and the deleting the event with the given eventId
+  Event.findOneAndDelete({ eventId: +req.params.eventId }, null, function (err, event) {
     if (err)
-      return err;
+      return res.status(500).send({ message: "Error deleting event with eventId " + req.params.eventId });
+    if (!event)
+      return res.status(404).send({ message: "Event not found with eventId " + req.params.eventId });
 
-    // Finding and the deleting the event with the given eventId
-    Event.findOneAndDelete({ eventId: +req.params.eventId }, null, function (err, event) {
+    //Finding and deleting every EventRegistration with the given eventId
+    EventRegistration.deleteMany({ eventId: +req.params.eventId }, {}, function (err) {
       if (err)
-        return res.status(500).send({ message: "Error deleting event with eventId " + req.params.eventId });
-      if (!event)
-        return res.status(404).send({ message: "Event not found with eventId " + req.params.eventId });
+        return res.status(500).send({ message: "Error deleting eventRegistration with eventId " + req.params.eventId });
 
-      //Finding and deleting every EventRegistration with the given eventId
-      EventRegistration.deleteMany({ eventId: +req.params.eventId }, {}, function (err) {
+      //Finding and deleting every RacePoint with the given eventId
+      RacePoint.deleteMany({ eventId: +req.params.eventId }, {}, function (err) {
         if (err)
-          return res.status(500).send({ message: "Error deleting eventRegistration with eventId " + req.params.eventId });
+          return res.status(500).send({ message: "Error deleting RacePoints with eventId " + req.params.eventId });
 
-        //Finding and deleting every RacePoint with the given eventId
-        RacePoint.deleteMany({ eventId: +req.params.eventId }, {}, function (err) {
-          if (err)
-            return res.status(500).send({ message: "Error deleting RacePoints with eventId " + req.params.eventId });
-
-          res.status(202).json(event);
-        })
+        res.status(202).json(event);
       })
-    });
+    })
   });
 };
 

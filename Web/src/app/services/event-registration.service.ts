@@ -13,7 +13,7 @@ import { environment } from './../../environments/environment';
 })
 export class EventRegistrationService {
   
-  private eventRegistrationUrl = environment.baseApiUrl + 'registration/';
+  private eventRegistrationUrl = environment.baseApiUrl + 'eventRegistrations/';
 
   constructor(private cookieService: CookieService, private http: HttpClient) { }
 

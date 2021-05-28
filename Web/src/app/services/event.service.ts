@@ -13,7 +13,7 @@ import { environment } from './../../environments/environment';
 })
 export class EventService {
 
-  private eventUrl = environment.baseApiUrl + 'event/';
+  private eventUrl = environment.baseApiUrl + 'events/';
   
   constructor(private http: HttpClient, private cookieService:CookieService) { }
 

@@ -4,25 +4,18 @@ import Ship from '../models/ship';
 import User from '../models/user';
 import Event from '../models/event';
 import RacePoint, { IRacePoint } from '../models/racePoint';
-import Authorize from './authentication.controller';
 import { Request, Response } from 'express';
 
 // Create and Save a new locationRegistration
 const create = (req: Request, res: Response) => {
 
-    // Checking if authorized 
-    Authorize(req, res, "user", function (err: any) {
+    // Creating the LocationRegistration
+    var locationRegistration = new LocationRegistration(req.body);
+    createLocationRegistration(locationRegistration, res, function (err: any, locationReg: ILocationRegistration) {
         if (err)
             return err;
 
-        // Creating the LocationRegistration
-        var locationRegistration = new LocationRegistration(req.body);
-        createLocationRegistration(locationRegistration, res, function (err: any, locationReg: ILocationRegistration) {
-            if (err)
-                return err;
-
-            return res.status(201).json(locationReg);
-        });
+        return res.status(201).json(locationReg);
     });
 };
 
@@ -33,7 +26,7 @@ const createLocationRegistration = (newLocationRegistration: ILocationRegistrati
             return callback(err);
 
         // Finding next regId
-        newLocationRegistration.locationTime.setHours(newLocationRegistration.locationTime.getHours()+2); 
+        newLocationRegistration.locationTime.setHours(newLocationRegistration.locationTime.getHours() + 2);
         CheckRacePoint(newLocationRegistration, res, function (updatedRegistration: ILocationRegistration) {
             if (updatedRegistration) {
                 newLocationRegistration = updatedRegistration
@@ -321,27 +314,21 @@ const getReplay = (req: Request, res: Response) => {
 //Deleting all locationRegistration with an given eventRegId
 const deleteFromEventRegId = (req: Request, res: Response) => {
 
-    // Checking if authorized 
-    Authorize(req, res, "user", function (err: any) {
+    // Finding and deleting the locationRegistrations with the given eventRegId
+    const filter = { eventRegId: +req.params.eventId };
+    LocationRegistration.find(filter, function (err, locationRegistrations) {
         if (err)
-            return err;
+            return res.status(500).send({ message: "Error deleting locationRegistrations with eventRegId " + req.params.regId });
+        if (!locationRegistrations)
+            return res.status(404).send({ message: "LocationRegistrations not found with eventRegId " + req.params.regId });
 
-        // Finding and deleting the locationRegistrations with the given eventRegId
-        const filter = { eventRegId: +req.params.eventId };
-        LocationRegistration.find(filter, function (err, locationRegistrations) {
+        LocationRegistration.deleteMany(filter, function (err: any) {
             if (err)
                 return res.status(500).send({ message: "Error deleting locationRegistrations with eventRegId " + req.params.regId });
             if (!locationRegistrations)
                 return res.status(404).send({ message: "LocationRegistrations not found with eventRegId " + req.params.regId });
 
-            LocationRegistration.deleteMany(filter, function (err: any) {
-                if (err)
-                    return res.status(500).send({ message: "Error deleting locationRegistrations with eventRegId " + req.params.regId });
-                if (!locationRegistrations)
-                    return res.status(404).send({ message: "LocationRegistrations not found with eventRegId " + req.params.regId });
-    
-                res.status(202).json(locationRegistrations);
-            });
+            res.status(202).json(locationRegistrations);
         });
     });
 };

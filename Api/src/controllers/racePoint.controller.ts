@@ -1,52 +1,45 @@
 import { Request, Response } from 'express';
-import Authorize from './authentication.controller';
 import RacePoint, { IRacePoint } from '../models/racePoint';
 
 //Create new racepoints
 const createRoute = (req: Request, res: Response) => {
-    
-    // Checking if authorized 
-    Authorize(req, res, "admin", function (err: any) {
+
+
+    //Deleting all previous racePoints
+    RacePoint.deleteMany({ eventId: +req.params.eventId }, function (err) {
         if (err)
-            return err;
+            return res.status(500).send({ message: err.message || "failed to delete route" })
 
-        //Deleting all previous racePoints
-        RacePoint.deleteMany({ eventId: +req.params.eventId }, function (err) {
-            if (err)
-                return res.status(500).send({ message: err.message || "failed to delete route" })
+        else {
+            var racePoints = req.body;
+            if (Array.isArray(racePoints)) {
+                RacePoint.findOne({}).sort('-racePointId').exec(function (err, lastRacePoint) {
+                    let racepointId: number;
 
-            else {
-                var racePoints = req.body;
-                if (Array.isArray(racePoints)) 
-                {
-                    RacePoint.findOne({}).sort('-racePointId').exec(function (err, lastRacePoint) {
-                        let racepointId: number;
+                    if (err)
+                        return res.status(500).send({ message: err.message || "Some error occurred while retriving bikeRacks" });
+                    if (lastRacePoint)
+                        racepointId = lastRacePoint.racePointId;
+                    else
+                        racepointId = 1;
 
-                        if (err)
-                            return res.status(500).send({ message: err.message || "Some error occurred while retriving bikeRacks" });
-                        if (lastRacePoint)
-                            racepointId = lastRacePoint.racePointId;
-                        else
-                            racepointId = 1;
+                    racePoints.forEach((racePoint: IRacePoint) => {
+                        let racepoint = new RacePoint(racePoint);
+                        racepointId = racepointId + 1;
+                        racepoint.racePointId = racepointId;
 
-                        racePoints.forEach((racePoint: IRacePoint) => {
-                            let racepoint = new RacePoint(racePoint);
-                            racepointId = racepointId + 1;
-                            racepoint.racePointId = racepointId;
-
-                            // Saving the new racepoint in the DB
-                            racepoint.save(function (err) {
-                                if (err)
-                                    return res.send(err);
-                            });
+                        // Saving the new racepoint in the DB
+                        racepoint.save(function (err) {
+                            if (err)
+                                return res.send(err);
                         });
                     });
-                    res.status(201).json(racePoints);
-                }
-                else
-                    return res.status(400).send();
+                });
+                res.status(201).json(racePoints);
             }
-        });
+            else
+                return res.status(400).send();
+        }
     });
 }
 
@@ -61,7 +54,7 @@ const findAllEventRacePoints = (req: Request, res: Response) => {
 
 //Retrieves start and finish racepoints from an given event
 const findStartAndFinish = (req: Request, res: Response) => {
-    RacePoint.find({ eventId: +req.params.eventId, $or: [{ type: 'startLine' }, { type: 'finishLine' }]}, { _id: 0, __v: 0 }, null, function (err, racePoints) {
+    RacePoint.find({ eventId: +req.params.eventId, $or: [{ type: 'startLine' }, { type: 'finishLine' }] }, { _id: 0, __v: 0 }, null, function (err, racePoints) {
         if (err)
             return res.status(500).send({ message: err.message || "Some error occurred while retriving racepoints" });
         res.status(200).json(racePoints);

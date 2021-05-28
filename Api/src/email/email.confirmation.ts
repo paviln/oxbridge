@@ -37,7 +37,7 @@ export default class EmailConfirmation{
     async emailtask(): Promise<void>{
 
         const user = await UserRepo.findById(this.emailId)
-       // const team = await 
+       
         const event = await EventRepo.findById(this.eventId);
 
         const email = await transporter.sendMail({
