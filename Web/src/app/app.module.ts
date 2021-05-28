@@ -23,6 +23,7 @@ import { RutePlannerComponent } from './components/rute-planner/rute-planner.com
 import { LiveEventComponent } from './components/live-event/live-event.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { AlertComponent } from './components/alert/alert.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
     AdminEventComponent,
     RutePlannerComponent,
     LiveEventComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    AlertComponent
   ],
   imports: [
     BrowserModule,
