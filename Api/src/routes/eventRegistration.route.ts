@@ -5,7 +5,7 @@ import authorize from '../middlewares/authorize';
 const router: Router = express.Router();
 
 // Create a new EventRegistration
-router.post('/', authorize, eventRegistration.create);
+router.post('/', authorize("user"), eventRegistration.create);
 
 // Retrieve all EventRegistrations
 router.get('/', authorize("admin"), eventRegistration.findAll);

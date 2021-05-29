@@ -2,9 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Input;
+using Xamarin.Essentials;
 using Oxbridge.App.Models;
 using Oxbridge.App.Services;
 using Xamarin.Forms;
+using System.Threading.Tasks;
+using Oxbridge.App.Helpers;
 
 namespace Oxbridge.App.ViewModels.Popups
 {
@@ -13,8 +16,8 @@ namespace Oxbridge.App.ViewModels.Popups
 
         #region -- Local variables -- 
         private ServerClient serverClient;
-
         private SingletonSharedData sharedData;
+        private byte[] file = null;
         #endregion
 
         #region -- Binding values -- 
@@ -60,7 +63,6 @@ namespace Oxbridge.App.ViewModels.Popups
             set { endTime = value; OnPropertyChanged(); }
         }
 
-
         private bool isNavigationVisible;
 
         public bool IsNavigationVisible
@@ -68,18 +70,22 @@ namespace Oxbridge.App.ViewModels.Popups
             get { return isNavigationVisible; }
             set { isNavigationVisible = value; OnPropertyChanged(); }
         }
+
+        private ImageSource image;
+        public ImageSource Image { get { return image; } set { image = value; OnPropertyChanged(); } }
         #endregion
 
         #region -- Commands -- 
         public ICommand NavigateToMapCMD { get; set; }
+        public ICommand TakePhotoCommand { get; set; }
         #endregion
-
 
         public EventPopupViewModel(Event selectedEvent)
         {
             sharedData = SingletonSharedData.GetInstance();
             serverClient = new ServerClient();
             NavigateToMapCMD = new Command(NavigateToMap);
+            TakePhotoCommand = new Command(async () => await TakePhotoAsync());
             this.SelectedEvent = selectedEvent;
 
             SetupBinding();
@@ -128,6 +134,23 @@ namespace Oxbridge.App.ViewModels.Popups
 
             await NavigationService.NavigateToAsync(typeof(MapViewModel));
             await PopupNavigation.PopAllAsync();
+        }
+
+        private async Task TakePhotoAsync()
+        {
+            Console.WriteLine("lol");
+            try
+            {
+                var photo = await MediaPicker.CapturePhotoAsync();
+                var stream = await photo.OpenReadAsync();
+                file = Conversion.StreamToByteArray(stream);
+                stream.Position = 0;
+                Image = ImageSource.FromStream(() => stream);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"CapturePhotoAsync THREW: {ex.Message}");
+            }
         }
 
     }

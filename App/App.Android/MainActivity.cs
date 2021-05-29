@@ -22,7 +22,7 @@ namespace Oxbridge.App.Droid
         private MainActivity instance;
         #endregion
 
-        
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             TabLayoutResource = Resource.Layout.Tabbar;
@@ -32,7 +32,7 @@ namespace Oxbridge.App.Droid
 
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             Forms.Init(this, savedInstanceState);
-            Rg.Plugins.Popup.Popup.Init(this, savedInstanceState);
+            Rg.Plugins.Popup.Popup.Init(this);
 
             instance = this;
 

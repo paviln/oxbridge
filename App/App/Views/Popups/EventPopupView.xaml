@@ -25,7 +25,14 @@
     <Frame BackgroundColor="#F1F1F1" CornerRadius="10" HasShadow="True" Margin="50,0,50,0" VerticalOptions="Center">
 
         <StackLayout BackgroundColor="#F1F1F1"  HorizontalOptions="Center" VerticalOptions="Center">
-            <Label Text="{Binding SelectedEvent.Name}" FontSize="24" FontAttributes="Bold"></Label>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Label Text="{Binding SelectedEvent.Name}" FontSize="24" FontAttributes="Bold"></Label>
+                <Button Text="Take Photo" Grid.Column="1" Command="{Binding TakePhotoCommand}" />
+            </Grid>
             <StackLayout Orientation="Horizontal">
                 <Label Text="By:" ></Label>
                 <Label Text="{Binding SelectedEvent.City}"></Label>
