@@ -106,7 +106,7 @@ namespace Oxbridge.App.ViewModels
             User savedUser = await dataController.GetUser();
             if (savedUser != null)
             {
-                User user = serverClient.Login(savedUser.Email, savedUser.Password);
+                User user = serverClient.Login(savedUser.EmailUsername, savedUser.Password);
                 if (user != null)
                 {
                     MenuItems.Add(new MasterMenuItems()
