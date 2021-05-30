@@ -40,7 +40,7 @@ export class UserDashboardComponent implements OnInit {
   setMyEvents()
   {
     this.events = this.eventService.getMyEvents();
-    this.ships = this.shipService.getMyShips(); 
+    this.ships = this.shipService.getMyShips();
     this.filter = new FormControl('');
     this.filter$ = this.filter.valueChanges.pipe(startWith(''));
 

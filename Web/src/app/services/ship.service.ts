@@ -4,7 +4,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { Ship } from '../models/ship';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-
+import { environment } from './../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,7 +12,7 @@ export class ShipService {
 
   // private shipUrl = 'https://oxbridgecloud.azurewebsites.net/ships/'
 
-  private shipUrl = 'http://localhost:3000/ships/'
+  private shipUrl = environment.baseApiUrl+'ships/'
   constructor(private http: HttpClient, private cookieService:CookieService) { }
 
   /**
