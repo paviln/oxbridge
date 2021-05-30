@@ -64,7 +64,6 @@ namespace Oxbridge.App.ViewModels.Popups
             set { startTime = value; OnPropertyChanged(); }
         }
 
-
         private String endTime;
 
         public String EndTime
@@ -127,12 +126,15 @@ namespace Oxbridge.App.ViewModels.Popups
 
             var user = await dataController.GetUser();
 
-            foreach (var ship in ships)
+            if (user != null)
             {
-                if (ship.EmailUsername.Equals(user.EmailUsername))
+                foreach (var ship in ships)
                 {
-                    IsLeader = true;
-                    break;
+                    if (ship.EmailUsername.Equals(user.EmailUsername))
+                    {
+                        IsLeader = true;
+                        break;
+                    }
                 }
             }
         }

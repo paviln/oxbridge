@@ -31,4 +31,7 @@ router.get('/hasRoute/:eventId', eventController.hasRoute);
 // Retrieve all events with participant
 router.get('/myEvents/findFromUsername', authorize("user"), eventController.findFromUsername);
 
+// Send a message
+router.post('/sendMessage/', authorize("admin"), eventController.sendMessage);
+
 export default router;

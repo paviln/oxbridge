@@ -27,7 +27,7 @@ router.put('/:shipId', authorize("admin"), shipController.update);
 router.delete('/:shipId', authorize("all"), shipController.remove);
 
 // Retrive ship image
-router.get('/getImage/:id', authorize("all"), shipController.getImage);
+router.get('/getImage/:id', shipController.getImage);
 
 // Upload ship image
 const upload = multer();

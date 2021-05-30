@@ -46,6 +46,7 @@
                 <Label Text="Slut tid:"></Label>
                 <Label Text="{Binding SelectedEvent.EventEnd}"></Label>
             </StackLayout>
+            <Label Text="Messages"></Label>
 
             <Frame BorderColor="Black" BackgroundColor="#F1F1F1" >
                 <ListView SeparatorColor="Transparent" HeightRequest="300" WidthRequest="170" x:Name="navigationList" ItemsSource="{Binding Ships}" SelectedItem="{Binding SelectedShip}" VerticalOptions="Center" HorizontalOptions="Center" HasUnevenRows="True">
@@ -76,6 +77,9 @@
                 </ListView>
             </Frame>
             <Button Text="{Binding EventStatus}" Command="{Binding NavigateToMapCMD}" VerticalOptions="Center" HorizontalOptions="Center" IsVisible="{Binding IsNavigationVisible}"  BorderRadius="8"></Button>
+            <ListView ItemsSource="{Binding SelectedEvent.Messages}" IsEnabled = "False" SelectionMode="None" />
+
         </StackLayout>
+
     </Frame>
 </pages:PopupPage>

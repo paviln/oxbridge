@@ -1,8 +1,9 @@
+import { Request, Response } from 'express';
+import { NotFound } from 'express-http-custom-error';
 import Event, { IEvent } from '../models/event';
 import EventRegistration, { IEventRegistration } from '../models/eventRegistration';
 import Ship, { IShip } from '../models/ship';
 import RacePoint from '../models/racePoint';
-import { Request, Response } from 'express';
 
 // Create and Save a new Event
 const create = (req: Request, res: Response) => {
@@ -172,6 +173,17 @@ const remove = (req: Request, res: Response) => {
   });
 };
 
+const sendMessage = async (req: Request, res: Response) => {
+  const event = await Event.findOne({ eventId: +req.body.eventId });
+  if (!event) throw new NotFound("Event not found with eventId " + req.body.eventId);
+  
+  event.messages.push(req.body.message);
+
+  const result = await event.save();
+
+  res.status(200).json(result);
+}
+
 export default {
   create,
   hasRoute,
@@ -181,5 +193,6 @@ export default {
   update,
   startEvent,
   stopEvent,
-  remove
+  remove,
+  sendMessage,
 }

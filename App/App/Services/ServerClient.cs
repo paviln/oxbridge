@@ -275,7 +275,6 @@ namespace Oxbridge.App.Services
             client.UseSystemTextJson(options);
 
             var request = new RestRequest("ships/getImage/" + shipId, Method.GET);
-            request.AddHeader("x-access-token", (await dataController.GetUser()).Token);
 
             var response = await client.ExecuteAsync<Models.Image>(request);
 
