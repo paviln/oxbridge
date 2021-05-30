@@ -7,7 +7,6 @@ import helmet from 'helmet';
 import mongoose from 'mongoose';
 import routes from './routes';
 import dotenv from 'dotenv';
-
 const app = express();
 
 const env = dotenv.config({path: __dirname + '/.env'});

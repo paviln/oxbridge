@@ -14,6 +14,8 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="RestSharp" Version="106.11.7" />
+    <PackageReference Include="RestSharp.Serializers.SystemTextJson" Version="106.11.7" />
     <PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.11" />
     <PackageReference Include="System.Text.Json" Version="5.0.2" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
@@ -22,6 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Views\Popups\ShipPopupView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Views\Popups\LoadingPopupView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
@@ -40,6 +45,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\Popups\ShipPopupView.xaml.cs">
+      <DependentUpon>ShipPopupView.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\Popups\EventPopupView.xaml.cs">
       <DependentUpon>EventPopupView.xaml</DependentUpon>
     </Compile>

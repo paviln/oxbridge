@@ -31,7 +31,7 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Label Text="{Binding SelectedEvent.Name}" FontSize="24" FontAttributes="Bold"></Label>
-                <Button Text="Take Photo" Grid.Column="1" Command="{Binding TakePhotoCommand}" />
+                <Button Text="Take Photo" Grid.Column="1" Command="{Binding TakePhotoCommand}" IsVisible="{Binding IsLeader}" />
             </Grid>
             <StackLayout Orientation="Horizontal">
                 <Label Text="By:" ></Label>
@@ -48,7 +48,7 @@
             </StackLayout>
 
             <Frame BorderColor="Black" BackgroundColor="#F1F1F1" >
-                <ListView SeparatorColor="Transparent" HeightRequest="300" WidthRequest="170" x:Name="navigationList" ItemsSource="{Binding Ships}" VerticalOptions="Center" HorizontalOptions="Center" HasUnevenRows="True">
+                <ListView SeparatorColor="Transparent" HeightRequest="300" WidthRequest="170" x:Name="navigationList" ItemsSource="{Binding Ships}" SelectedItem="{Binding SelectedShip}" VerticalOptions="Center" HorizontalOptions="Center" HasUnevenRows="True">
                     <ListView.Header>
                         <Grid>
                             <Grid.ColumnDefinitions>
