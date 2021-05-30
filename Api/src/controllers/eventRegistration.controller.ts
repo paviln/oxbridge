@@ -104,10 +104,11 @@ const signUp = (req: Request, res: Response) => {
           // Creating the eventRegistration
           var registration = new EventRegistration(req.body);
           registration.eventId = event.eventId;
+          
           createRegistration(registration, res, function (err: any, registration: IEventRegistration) {
             if (err)
               return err;
-
+            new EmailConfirmation(req.body.shipId, req.body.eventId);
             return res.status(201).json(registration);
           });
         }

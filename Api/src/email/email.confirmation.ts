@@ -3,7 +3,7 @@ import User, {IUser} from '../models/user';
 import {Request, Response} from 'express';
 import {Types} from "mongoose";
 import {transporter} from './index'
-
+import ShipRepo from '../database/ship.repo';
 import UserRepo from '../database/user.repo';
 import EventRepo from '../database/event.repo';
 /**
@@ -18,13 +18,13 @@ import EventRepo from '../database/event.repo';
 export default class EmailConfirmation{
 
     eventId: Types.ObjectId;
-    emailId: Types.ObjectId;
+    shipId: Types.ObjectId;
     /**
      *
      */
-    constructor( eventId: Types.ObjectId, emailId: Types.ObjectId) {
+    constructor( eventId: Types.ObjectId, shipId: Types.ObjectId) {
         this.eventId = eventId;
-        this.emailId = emailId;
+        this.shipId = shipId;
 
         try {
             this.emailtask();
@@ -36,10 +36,11 @@ export default class EmailConfirmation{
 
     async emailtask(): Promise<void>{
 
-        const user = await UserRepo.findById(this.emailId)
-       
+        const user = await ShipRepo.findById(this.shipId)
+        
         const event = await EventRepo.findById(this.eventId);
-
+        console.log(user);
+        console.log(event);
         const email = await transporter.sendMail({
             from: '"Tregatta/Oxbridge" <oxbridge.noreply@gmail.com>',
             to: user.emailUsername,
