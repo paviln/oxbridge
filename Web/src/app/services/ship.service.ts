@@ -52,6 +52,7 @@ export class ShipService {
    */
   public addShip(newShip: Ship): Observable<Ship>
   {
+    
     let user = JSON.parse(this.cookieService.get('user'));
     const httpOptions = {
       headers: new HttpHeaders({
@@ -59,6 +60,16 @@ export class ShipService {
         'x-access-token': user.token
       })
     }
+    newShip = {
+      name: newShip.name,
+      emailUsername: user.emailUsername
+    }
     return this.http.post<Ship>(this.shipUrl, newShip, httpOptions).pipe(map(ship => { return ship }));
   }
 }
+/*
+public registerUser(newUser: User): Observable<User> {
+  return this.http.post<User>(this.userUrl+"register", newUser).pipe(map(user => {
+    user.role = this.getDecodedAccessToken(user.token).role;
+    return user;
+    */
