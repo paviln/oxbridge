@@ -3,13 +3,13 @@ import { Observable } from 'rxjs';
 import { Score } from '../models/score';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-
+import { environment } from './../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class LocationRegistrationService {
 
-  private locationRegUrl = "http://localhost:3000/locationRegistrations/";
+  private locationRegUrl = environment.baseApiUrl+'locationRegistrations/';
 
   //private locationRegUrl = "https://oxbridgecloud.azurewebsites.net/locationRegistrations/";
   constructor(private http: HttpClient) { }
