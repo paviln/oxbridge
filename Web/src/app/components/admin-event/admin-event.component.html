@@ -45,6 +45,13 @@
                         <button type="button" *ngIf="(event|async).isLive" id="eventHandler" class="btn btn-danger mr-4"
                             (click)="stopEvent()">Stop Event</button>
                         <button type="button" class="btn btn-info " routerLink="ruteplanner">{{buttonText}}</button>
+                        <form>
+                            <div class="mb-3">
+                              <label for="message" class="form-label">Message</label>
+                              <textarea type="text" class="form-control" id="message" aria-describedby="message"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Broadcast</button>
+                          </form>
                     </div>
                 </div>
             </form>

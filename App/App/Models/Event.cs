@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Oxbridge.App.Models
 {
@@ -19,6 +20,12 @@ namespace Oxbridge.App.Models
         public DateTime ActualEventStart { get; set; }
 
         public bool IsLive { get; set; }
+        private List<string> messages = new List<string>();
+        public List<string> Messages
+        {
+            get { return messages; }
+            set { messages = value; }
+        }
 
     }
 }

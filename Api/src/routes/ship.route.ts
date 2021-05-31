@@ -1,4 +1,5 @@
 import express from 'express';
+import multer from 'multer';
 import shipController from '../controllers/ship.controller';
 import authorize from '../middlewares/authorize';
 // eslint-disable-next-line new-cap
@@ -24,5 +25,12 @@ router.put('/:shipId', authorize("admin"), shipController.update);
 
 // Delete a ship
 router.delete('/:shipId', authorize("all"), shipController.remove);
+
+// Retrive ship image
+router.get('/getImage/:id', shipController.getImage);
+
+// Upload ship image
+const upload = multer();
+router.route('/uploadImage').post(upload.single('image'), authorize("user"), shipController.uploadImage);
 
 export default router;

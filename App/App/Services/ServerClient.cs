@@ -3,6 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Text.Json;
+using RestSharp;
+using RestSharp.Serializers.SystemTextJson;
 using System.Threading.Tasks;
 using Oxbridge.App.Data;
 using Oxbridge.App.Models;
@@ -32,7 +35,7 @@ namespace Oxbridge.App.Services
         {
             String target = Target.Authenticate;
 
-            String jsonData = "{\"email\": \"" + username + "\", \"password\": \"" + password + "\" }";
+            String jsonData = "{\"emailUsername\": \"" + username + "\", \"password\": \"" + password + "\" }";
             WebRequest request = WebRequest.Create(target);
             request.Method = "POST";
             request.ContentType = "application/json";
@@ -257,6 +260,43 @@ namespace Oxbridge.App.Services
             {
                 return response.StatusCode.ToString();
             }
+        }
+
+        /// <summary>
+        /// Get image from ship.
+        /// </summary>
+        public async Task<Models.Image> GetImage(int shipId)
+        {
+            var client = new RestClient(Target.StandardAdress);
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            client.UseSystemTextJson(options);
+
+            var request = new RestRequest("ships/getImage/" + shipId, Method.GET);
+
+            var response = await client.ExecuteAsync<Models.Image>(request);
+
+            return response.Data;
+        }
+
+        /// <summary>
+        /// Upload image to ship.
+        /// </summary>
+        public async Task<bool> UploadImage(int shipId, Models.Image img)
+        {
+            var client = new RestClient(Target.StandardAdress);
+
+            var request = new RestRequest("ships/uploadImage/", Method.POST);
+            request.AddHeader("x-access-token", (await dataController.GetUser()).Token);
+            request.AddHeader("Content-Type", "multipart/form-data");
+            request.AddParameter("shipId", shipId);
+            request.AddFile("image", img.Data.data, "image.jpeg");
+
+            var response = await client.ExecutePostAsync(request);
+
+            return response.IsSuccessful;
         }
     }
 }

@@ -1,6 +1,7 @@
+import { Request, Response } from 'express';
+import {NotFound} from 'express-http-custom-error';
 import Ship, { IShip } from '../models/ship';
 import EventRegistrations, { IEventRegistration } from '../models/eventRegistration';
-import { Request, Response } from 'express';
 
 // Create and Save a new ship
 const create = (req: Request, res: Response) => {
@@ -80,7 +81,7 @@ const findFromEventId = (req: Request, res: Response) => {
             return res.status(500).send({ message: err.message || "Some error occurred while retriving bikeRacks" });
           }
           if (ship) {
-            ships.push({ "shipId": ship.shipId, "name": ship.name, "teamName": eventRegistration.teamName });
+            ships.push({ "shipId": ship.shipId, "name": ship.name, "emailUsername": ship.emailUsername, "teamName": eventRegistration.teamName });
           }
           if (pending === 0) {
             res.status(200).json(ships);
@@ -92,7 +93,6 @@ const findFromEventId = (req: Request, res: Response) => {
     }
   });
 };
-
 
 // Update a ship identified by the shipId
 const update = (req: Request, res: Response) => {
@@ -121,6 +121,26 @@ const remove = (req: Request, res: Response) => {
   });
 };
 
+const getImage = async (req: Request, res: Response) => {
+  const ship = await Ship.findOne({ shipId: +req.params.id }).select('img -_id');
+  if (!ship) throw new NotFound("Ship with id " + req.params.id + " was not found.");
+
+  res.status(200).send(ship.img);
+}
+
+const uploadImage = async (req: Request, res: Response) => {
+  const ship = await Ship.findOne({ shipId: +req.body.shipId });
+  if (!ship) throw new NotFound("Ship with id " + req.body.shipId + " was not found.");
+  ship.img = {
+    data: req.file.buffer,
+    contentType: 'image/png',
+  }
+
+  const result = await ship.save();
+
+  res.status(204).json(result);
+}
+
 export default {
   create,
   findMyShips,
@@ -129,4 +149,6 @@ export default {
   findFromEventId,
   update,
   remove,
+  getImage,
+  uploadImage,
 }

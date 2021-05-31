@@ -2,9 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Input;
+using Xamarin.Essentials;
 using Oxbridge.App.Models;
 using Oxbridge.App.Services;
 using Xamarin.Forms;
+using System.Threading.Tasks;
+using Oxbridge.App.Helpers;
+using Oxbridge.App.Data;
+using Oxbridge.App.Views.Popups;
 
 namespace Oxbridge.App.ViewModels.Popups
 {
@@ -13,8 +18,9 @@ namespace Oxbridge.App.ViewModels.Popups
 
         #region -- Local variables -- 
         private ServerClient serverClient;
-
         private SingletonSharedData sharedData;
+        private DataController dataController;
+        private byte[] file = null;
         #endregion
 
         #region -- Binding values -- 
@@ -42,6 +48,13 @@ namespace Oxbridge.App.ViewModels.Popups
             set { selectedEvent = value; OnPropertyChanged(); }
         }
 
+        private Ship selectedShip;
+
+        public Ship SelectedShip
+        {
+            get { return selectedShip; }
+            set { selectedShip = value; OnPropertyChanged(); NavigateToShip(); }
+        }
 
         private String startTime;
 
@@ -51,7 +64,6 @@ namespace Oxbridge.App.ViewModels.Popups
             set { startTime = value; OnPropertyChanged(); }
         }
 
-
         private String endTime;
 
         public String EndTime
@@ -60,7 +72,6 @@ namespace Oxbridge.App.ViewModels.Popups
             set { endTime = value; OnPropertyChanged(); }
         }
 
-
         private bool isNavigationVisible;
 
         public bool IsNavigationVisible
@@ -68,18 +79,28 @@ namespace Oxbridge.App.ViewModels.Popups
             get { return isNavigationVisible; }
             set { isNavigationVisible = value; OnPropertyChanged(); }
         }
+
+        private bool isLeader = false;
+
+        public bool IsLeader
+        {
+            get { return isLeader; }
+            set { isLeader = value; }
+        }
         #endregion
 
         #region -- Commands -- 
         public ICommand NavigateToMapCMD { get; set; }
+        public ICommand TakePhotoCommand { get; set; }
         #endregion
-
 
         public EventPopupViewModel(Event selectedEvent)
         {
             sharedData = SingletonSharedData.GetInstance();
             serverClient = new ServerClient();
+            dataController = new DataController();
             NavigateToMapCMD = new Command(NavigateToMap);
+            TakePhotoCommand = new Command(async () => await TakePhotoAsync());
             this.SelectedEvent = selectedEvent;
 
             SetupBinding();
@@ -89,7 +110,7 @@ namespace Oxbridge.App.ViewModels.Popups
         /// <summary>
         /// Setting up the binding properties with data
         /// </summary>
-        private void SetupBinding()
+        private async void SetupBinding()
         {
             EventStatus = selectedEvent.Status;
             Ships = serverClient.GetShipsFromEventId(selectedEvent.EventId);
@@ -101,6 +122,20 @@ namespace Oxbridge.App.ViewModels.Popups
             else
             {
                 IsNavigationVisible = true;
+            }
+
+            var user = await dataController.GetUser();
+
+            if (user != null)
+            {
+                foreach (var ship in ships)
+                {
+                    if (ship.EmailUsername.Equals(user.EmailUsername))
+                    {
+                        IsLeader = true;
+                        break;
+                    }
+                }
             }
         }
 
@@ -128,6 +163,47 @@ namespace Oxbridge.App.ViewModels.Popups
 
             await NavigationService.NavigateToAsync(typeof(MapViewModel));
             await PopupNavigation.PopAllAsync();
+        }
+
+        /// <summary>
+        /// Navigates to a PopupPage with the selected ship
+        /// </summary>
+        private async void NavigateToShip()
+        {
+            if (selectedShip != null)
+            {
+                Ship tempSelectedShip = selectedShip;
+                SelectedShip = null;
+                var image = await serverClient.GetImage(tempSelectedShip.ShipId);
+                tempSelectedShip.Img = image;
+                await PopupNavigation.PushAsync(new LoadingPopupView());
+                await PopupNavigation.PushAsync(new ShipPopupView(tempSelectedShip));
+            }
+        }
+
+        private async Task TakePhotoAsync()
+        {
+            try
+            {
+                var mediaPicker = await MediaPicker.CapturePhotoAsync();
+                var stream = await mediaPicker.OpenReadAsync();
+                file = Conversion.StreamToByteArray(stream);
+
+                var data = new Models.Data()
+                {
+                    data = file
+                };
+                var img = new Models.Image()
+                {
+                    Data = data
+                };
+
+                await serverClient.UploadImage(selectedEvent.EventId, img);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"CapturePhotoAsync THREW: {ex.Message}");
+            }
         }
 
     }

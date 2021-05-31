@@ -10,7 +10,8 @@ export interface IEvent extends Document {
   actualEventStart: Date,
   isLive: boolean,
   checked: boolean,
-  eventRegId: number
+  eventRegId: number,
+  messages: string[],
 }
 
 const EventSchema: Schema = new Schema({
@@ -23,6 +24,7 @@ const EventSchema: Schema = new Schema({
   actualEventStart: Date,
   isLive: Boolean,
   eventRegId: Number,
+  messages: [String],
 });
 
 export default mongoose.model<IEvent>('Event', EventSchema);
