@@ -20,26 +20,26 @@
         <li class="nav-item">
           <a class="nav-link" routerLink="/omos" routerLinkActive="active">Om os</a>
         </li>
+        <div *ngIf="user">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle"  id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Dropdown
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" routerLink="/mineEvents">Mine Events</a></li>
+              <li><a class="dropdown-item" routerLink="/profil">Profil</a></li>            
+              <div *ngIf="user.role === 'admin'">
+                <li> <a class="dropdown-item" routerLink="/administrerEvents">Administrer Events</a></li>
+              </div>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" (click)="LogOut()">Log ud</a></li>
+            </ul>
+          </li>        
+        </div>
       </ul>
       <div *ngIf="!user">
         <button class="btn btn-outline-info my-2 my-sm-0 btn-sm" routerLink="/logind">Log ind</button>
-      </div>
-      <div *ngIf="user">
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle"  id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Dropdown
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" routerLink="/mineEvents">Mine Events</a></li>
-            <li><a class="dropdown-item" routerLink="/profil">Profil</a></li>            
-            <div *ngIf="user.role === 'admin'">
-              <li> <a class="dropdown-item" routerLink="/administrerEvents">Administrer Events</a></li>
-            </div>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" (click)="LogOut()">Log ud</a></li>
-          </ul>
-        </li>        
-      </div>
+      </div>      
     </div>
   </div>
 </nav>

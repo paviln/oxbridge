@@ -104,10 +104,13 @@ const signUp = (req: Request, res: Response) => {
           // Creating the eventRegistration
           var registration = new EventRegistration(req.body);
           registration.eventId = event.eventId;
+          
           createRegistration(registration, res, function (err: any, registration: IEventRegistration) {
             if (err)
               return err;
-
+            console.log("hey");
+           
+            new EmailConfirmation(registration.eventId, registration.shipId);
             return res.status(201).json(registration);
           });
         }
@@ -179,7 +182,6 @@ const addParticipant = (req: Request, res: Response) => {
 
       var hashedPassword = bcrypt.hashSync("1234", 10);
       var newUser = new User({ "emailUsername": req.body.emailUsername, "firstname": req.body.firstname, "lastname": req.body.lastname, "password": hashedPassword, "role": "user" });
-
       newUser.save(function (err) {
         if (err)
           return res.send(err);
@@ -220,7 +222,8 @@ const addParticipant = (req: Request, res: Response) => {
         createRegistration(newEventRegistration, res, function (err: any, registration: IEventRegistration) {
           if (err)
             return err;
-
+          console.log(ship.shipId);
+          new EmailConfirmation(ship.shipId, req.body.eventId);
           return res.status(201).json(registration);
         });
       }
