@@ -1,11 +1,11 @@
 
 import User, {IUser} from '../models/user';
+import Ship, {IShip} from '../models/ship';
+import Event, {IEvent} from '../models/event';
 import {Request, Response} from 'express';
 import {Types} from "mongoose";
 import {transporter} from './index'
-import ShipRepo from '../database/ship.repo';
-import UserRepo from '../database/user.repo';
-import EventRepo from '../database/event.repo';
+import { getEmailInfo } from '../config/config';
 /**
  * Class EmailConfirmation
  * That sends an confirmation email 
@@ -22,7 +22,7 @@ export default class EmailConfirmation{
     /**
      *
      */
-    constructor( eventId: number, shipId: number) {
+    constructor(shipId: number, eventId: number) {
         this.eventId = eventId;
         this.shipId = shipId;
 
@@ -35,26 +35,25 @@ export default class EmailConfirmation{
     }
 
     async emailtask(): Promise<void>{
-        
-        const ship = await ShipRepo.findById(this.shipId)
+       
+        const ship = await Ship.findOne({shipId: this.shipId});
         if(!ship) return;
-        const user = await UserRepo.findById(ship.emailUsername);
+       
+        const user = await User.findOne({emailUsername: ship.emailUsername});
         if(!user) return;
-        var event = await EventRepo.findById(this.eventId);
+    
+        const event = await Event.findOne({eventId: this.eventId});
         if(!event) return;
-        console.log("I am ship: "+ ship);
-        console.log("I am User: "+ user);
-        console.log("I am Event:" + event);
-        const email = await transporter.sendMail({
-            from: '"Tregatta/Oxbridge" <oxbridge.noreply@gmail.com>',
+        
+        const emaild = await transporter.sendMail({
+            from: 'oxbridge.noreply@gmail.com',
             to: user.emailUsername,
-            subject: "Dear Participant, you are now registered for: " + event.name,
+            subject: 'Dear Participant, you are now registered for: ' + event.name,
             html: `<h1>Email Confirmation</h1>
                     <h2>Hello ${user.firstname}</h2>
                     <p>Thank you for signing up on ${event.name}. Your event starts at: ${event.eventStart}</p>
                     </div>`,
             headers: { 'x-myheader': 'Tregatta/Oxbridge Event' }
-            
         }).catch((err: any) => console.log(err));
     }
 }

@@ -182,7 +182,6 @@ const addParticipant = (req: Request, res: Response) => {
 
       var hashedPassword = bcrypt.hashSync("1234", 10);
       var newUser = new User({ "emailUsername": req.body.emailUsername, "firstname": req.body.firstname, "lastname": req.body.lastname, "password": hashedPassword, "role": "user" });
-      new EmailConfirmation(req.body.shipId, req.body.eventId);
       newUser.save(function (err) {
         if (err)
           return res.send(err);
@@ -223,7 +222,8 @@ const addParticipant = (req: Request, res: Response) => {
         createRegistration(newEventRegistration, res, function (err: any, registration: IEventRegistration) {
           if (err)
             return err;
-
+          console.log(ship.shipId);
+          new EmailConfirmation(ship.shipId, req.body.eventId);
           return res.status(201).json(registration);
         });
       }

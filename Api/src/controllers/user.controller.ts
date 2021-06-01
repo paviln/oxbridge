@@ -3,6 +3,8 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { getJwtSecret } from '../config/config';
 import User, { IUser } from '../models/user';
+import EmailForgotPassword from '../email/email.forgotPassword';
+
 
 // Retrieve and return all users from the database.
 const findAll = (req: Request, res: Response) => {
@@ -128,6 +130,17 @@ const login = (req: Request, res: Response) => {
     });
 };
 
+const forgotPassword = async (req: Request, res: Response) => {
+    const user = await User.findOne({emailUsername: req.body.emailUsername});
+    if(!user) throw new Error("user not found");
+
+    user.password = '1234';
+    new EmailForgotPassword(user.emailUsername, user.password);
+    await user.save();
+
+    res.status(200).send(user);
+}
+
 export default {
     findAll,
     findOne,
@@ -136,4 +149,5 @@ export default {
     registerAdmin,
     register,
     login,
+    forgotPassword
 }

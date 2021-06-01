@@ -1,8 +1,5 @@
 import { CronJob } from 'cron';
 import { transporter } from './index'
-
-import UserRepo from '../database/user.repo';
-import EventRepo from '../database/event.repo';
 /**
  * Class EmailReminder
  * That checks the database every hour for due dates of events
