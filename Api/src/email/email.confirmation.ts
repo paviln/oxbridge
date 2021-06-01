@@ -17,12 +17,12 @@ import EventRepo from '../database/event.repo';
 
 export default class EmailConfirmation{
 
-    eventId: Types.ObjectId;
-    shipId: Types.ObjectId;
+    eventId: number;
+    shipId: number;
     /**
      *
      */
-    constructor( eventId: Types.ObjectId, shipId: Types.ObjectId) {
+    constructor( eventId: number, shipId: number) {
         this.eventId = eventId;
         this.shipId = shipId;
 
@@ -35,21 +35,26 @@ export default class EmailConfirmation{
     }
 
     async emailtask(): Promise<void>{
-
-        const user = await ShipRepo.findById(this.shipId)
         
-        const event = await EventRepo.findById(this.eventId);
-        console.log(user);
-        console.log(event);
+        const ship = await ShipRepo.findById(this.shipId)
+        if(!ship) return;
+        const user = await UserRepo.findById(ship.emailUsername);
+        if(!user) return;
+        var event = await EventRepo.findById(this.eventId);
+        if(!event) return;
+        console.log("I am ship: "+ ship);
+        console.log("I am User: "+ user);
+        console.log("I am Event:" + event);
         const email = await transporter.sendMail({
             from: '"Tregatta/Oxbridge" <oxbridge.noreply@gmail.com>',
             to: user.emailUsername,
             subject: "Dear Participant, you are now registered for: " + event.name,
-            text: "Your event " + event.name + " : "+ event.eventCode + " is in " + event.city + ". The event starts at: " + event.eventStart + ".",
+            html: `<h1>Email Confirmation</h1>
+                    <h2>Hello ${user.firstname}</h2>
+                    <p>Thank you for signing up on ${event.name}. Your event starts at: ${event.eventStart}</p>
+                    </div>`,
             headers: { 'x-myheader': 'Tregatta/Oxbridge Event' }
             
-        }).catch((error: any) =>{
-            console.error(error);
-        });
+        }).catch((err: any) => console.log(err));
     }
 }

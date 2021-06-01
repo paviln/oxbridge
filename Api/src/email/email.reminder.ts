@@ -35,8 +35,8 @@ export default class EmailReminder {
   }
 
   async checktask(): Promise<void> {
-    // const user = await UserRepo.findById(this.emailId)
-    // const event = await EventRepo.findById(this.eventId);
+  /*  const user = await UserRepo.findById(this.emailId)
+    const event = await EventRepo.findById(this.eventId);
 
     //Define min and max database of checking of events
     const max = new Date();
@@ -49,14 +49,15 @@ export default class EmailReminder {
 
     const email = await transporter.sendMail({
       from: '"Tregatta/Oxbridge" <oxbridge.noreply@gmail.com>',
-      to: "",
-      subject: "Do not forget your upcomming race event at Oxbridge",
-      text: "Your event starts at: ",
+      to: user.emailUsername,
+      subject: "Dear Participant, you are now registered for: " + event.name,
+      html: `<h1>Email Confirmation</h1>
+              <h2>Hello ${user.firstname}</h2>
+              <p>Thank you for signing up on ${event.name}. Your event starts at: ${event.eventStart}</p>
+              </div>`,
       headers: { 'x-myheader': 'Tregatta/Oxbridge Event' }
 
-    }).catch((error: any) => {
-      console.error(error);
-    });
+    }).catch((err: any) => console.log(err)); */
   }
 }
 

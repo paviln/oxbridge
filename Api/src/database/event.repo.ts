@@ -4,13 +4,17 @@ import { exec } from 'child_process';
 
 
 export default class EventRepo {
-  public static async findById(id: Types.ObjectId): Promise<IEvent> {
-    return Event.findOne({ _id: id })
-      .lean<IEvent>()
-      .exec();
+  public static async findById(eventId: number): Promise<IEvent> {
+
+    try {
+      Event.findOne({eventId:eventId}).lean<IEvent>().exec();
+    } catch (error) {
+      console.log(error);
+    }
+    return new Event;
   }
   public static async findCheckedEvent(): Promise<IEvent> {
-    return Event.find({})
+    return Event.find({checked: false, isLive: false})
       .lean<IEvent>()
       .exec();
   }
