@@ -69,10 +69,10 @@ export class UserService {
   }
 
   public forgotPassword(emailUsername: string){
-    return this.http.post<User>(this.userUrl+"/forgot-password",{emailUsername});
+    return this.http.post<User>(this.userUrl+"/forgotPassword",{emailUsername});
   }
 
   public resetPassword(token: string, password:string, confirmPassword:string){
-    return this.http.post<User>(this.userUrl+"/reset-password",{token,password,confirmPassword});
+    return this.http.post<User>(this.userUrl+"/resetPassword",{token,password,confirmPassword});
   }
 }
