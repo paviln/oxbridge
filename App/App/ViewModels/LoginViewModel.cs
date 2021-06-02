@@ -22,6 +22,7 @@ namespace Oxbridge.App.ViewModels
         public ICommand LoginCMD { get; set; }
         public ICommand EntryFocusedCommand { get; set; }
         public ICommand LoginClickedCMD { get; set; }
+        public ICommand ResetPasswordCommand { get; set; }
         #endregion
 
         #region -- Binding values --
@@ -57,6 +58,7 @@ namespace Oxbridge.App.ViewModels
             LoginCMD = new Command(Login);
             EntryFocusedCommand = new Command(EntryFocused);
             LoginClickedCMD = new Command(Login);
+            ResetPasswordCommand = new Command(ResetPassword);
         }
 
         /// <summary>
@@ -78,6 +80,11 @@ namespace Oxbridge.App.ViewModels
                 WrongLoginVisibility = true;
                 PopupNavigation.PopAllAsync();
             }
+        }
+
+        private async void ResetPassword()
+        {
+            await serverClient.ResetPassword(Username);
         }
 
         private void EntryFocused()

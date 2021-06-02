@@ -34,29 +34,36 @@
     <ContentPage.Content>
         <Frame BackgroundColor="White" CornerRadius="17" BorderColor="White">
             <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="0.2*"/>
-                    <RowDefinition Height="1.4*"/>
-                    <RowDefinition Height="0.2*"/>
-                    <RowDefinition Height="0.3*"/>
-                    <RowDefinition Height="0.3*"/>
-                    <RowDefinition Height="0.9*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Image Grid.Row="1" Source="tregattaIcon.png"></Image>
-                <Entry Grid.Row="3" Placeholder="Brugernavn" Text="{Binding Username}">
+                <Image Grid.Row="0" Source="tregattaIcon.png"></Image>
+                <Entry Grid.Row="1" Placeholder="Brugernavn" Text="{Binding Username}">
                     <Entry.Behaviors >
                         <customBehaviors:EventToCommandBehavior EventName="Focused" Command="{Binding EntryFocusedCommand}" ></customBehaviors:EventToCommandBehavior>
                         <customBehaviors:EmailValidatorBehavior x:Name="EmailValidator" IsValid ="{Binding IsEmailValid}"></customBehaviors:EmailValidatorBehavior>
                     </Entry.Behaviors>
                 </Entry>
-                <Entry Grid.Row="4" Placeholder="Adgangskode" Text="{Binding Password}" IsPassword="True" VerticalOptions="Start">
+                <Entry Grid.Row="2" Placeholder="Adgangskode" Text="{Binding Password}" IsPassword="True" VerticalOptions="Start">
                     <Entry.Behaviors >
                         <customBehaviors:EventToCommandBehavior EventName="Focused" Command="{Binding EntryFocusedCommand}" ></customBehaviors:EventToCommandBehavior>
                         <customBehaviors:EventToCommandBehavior EventName="Completed" Command="{Binding LoginClickedCMD}" ></customBehaviors:EventToCommandBehavior>
                     </Entry.Behaviors>
                 </Entry>
-                <Label Text="Forkert brugernavn eller adgangskode" Grid.Row="5"  FontSize="24" IsVisible="{Binding WrongLoginVisibility}" TextColor="Red"></Label>
-                <Button Grid.Row="5" Text="Log ind" Command="{Binding LoginCMD}"></Button>
+                <Label Text="Forkert brugernavn eller adgangskode" Grid.Row="3"  FontSize="24" IsVisible="{Binding WrongLoginVisibility}" TextColor="Red"></Label>
+                <Button Grid.Row="4" Text="Log ind" Command="{Binding LoginCMD}"></Button>
+                <Label Grid.Row="5" Text="Or" HorizontalTextAlignment="Center" FontSize="18" />
+                <Button Grid.Row="6" Text="Reset password" WidthRequest="250" Command="{Binding ResetPasswordCommand}"></Button>
             </Grid>
         </Frame>
     </ContentPage.Content>

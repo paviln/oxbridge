@@ -298,5 +298,18 @@ namespace Oxbridge.App.Services
 
             return response.IsSuccessful;
         }
+        /// <summary>
+        /// Reset password of user.
+        /// </summary>
+        public async Task<bool> ResetPassword(string emailUsername)
+        {
+            var client = new RestClient(Target.StandardAdress);
+            var request = new RestRequest("users/forgotPassword/", Method.POST);
+            var param = new { emailUsername = emailUsername };
+            request.AddJsonBody(param);
+            var response = await client.ExecutePostAsync(request);
+
+            return response.IsSuccessful;
+        }
     }
 }
