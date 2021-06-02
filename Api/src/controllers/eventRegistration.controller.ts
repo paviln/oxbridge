@@ -107,10 +107,9 @@ const signUp = (req: Request, res: Response) => {
           
           createRegistration(registration, res, function (err: any, registration: IEventRegistration) {
             if (err)
-              return err;
-            console.log("hey");
+              return err;            
            
-            new EmailConfirmation(registration.eventId, registration.shipId);
+            new EmailConfirmation(registration.shipId, event.eventId);
             return res.status(201).json(registration);
           });
         }
