@@ -87,6 +87,24 @@ export class EventService {
     return this.http.put(this.eventUrl+eventId, event, httpOptions).pipe(map(event => {return event}));
   }
 
+  public addBroadcast(eventId, message){
+    let user = JSON.parse(this.cookieService.get('user'));
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'x-access-token': user.token
+      })
+    }
+    const eventMessage = {
+      eventId: eventId,
+      message: message
+    }
+    const http = this.http.post(this.eventUrl+"sendMessage/", eventMessage, httpOptions).subscribe(
+      (response) => console.log(response),
+      (error) => console.log(error)
+    )
+    return http;
+  } 
   /**
    * Sends a http delete request to the backend, in order to delete an event
    * @param eventId - The id of the event

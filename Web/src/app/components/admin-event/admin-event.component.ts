@@ -27,6 +27,7 @@ export class AdminEventComponent implements OnInit {
   filteredParticipants: Observable<Participant[]>;
 
   eventForm: FormGroup;
+  broadcastForm: FormGroup;
   model: Participant;
 
   buttonText: String;
@@ -46,6 +47,10 @@ export class AdminEventComponent implements OnInit {
       startTime: ['', Validators.required],
       endTime: ['', Validators.required]
     });
+
+    this.broadcastForm = this.formBuilder.group({
+      message: ['', Validators.required]
+    })
 
     this.setEvent();
     this.setParticipants();
@@ -111,7 +116,12 @@ export class AdminEventComponent implements OnInit {
         })))
     );
   }
+  addBroadcast(){
+    var eventMessage: string;
+    eventMessage = this.broadcastForm.controls['message'].value;
 
+    this.eventService.addBroadcast(this.eventId, eventMessage);
+  }
   /**
    * Event handler for submitting changes to the event information
    */
