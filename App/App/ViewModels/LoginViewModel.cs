@@ -10,7 +10,7 @@ using Xamarin.Forms;
 
 namespace Oxbridge.App.ViewModels
 {
-    class LoginViewModel : BaseViewModel
+    public class LoginViewModel : BaseViewModel
     {
         #region -- Local variables --
         private ServerClient serverClient;
