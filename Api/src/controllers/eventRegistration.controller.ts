@@ -158,7 +158,7 @@ const getParticipants = (req: Request, res: Response) => {
                   "eventRegId": eventRegistration.eventRegId
                 }
                 participants.push(participant);
-
+                  
                 if (pending === 0) {
                   return res.status(200).json(participants);
                 }
