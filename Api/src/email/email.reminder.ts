@@ -1,61 +1,41 @@
-import { CronJob } from 'cron';
 import { transporter } from './index'
-/**
- * Class EmailReminder
- * That checks the database every hour for due dates of events
- * Sends an email to particpants of that event if within 3 days
- * of the start date of the event.
- * Uses CronJob to do a job in intervals.
- * 
- *  https://stackoverflow.com/questions/64777543/how-to-make-a-cron-job-for-a-typescript-class-method
- */
-export default class EmailReminder {
+import { compareAsc, format, addHours, addDays, endOfDay } from 'date-fns'
+import eventRegistration from '../controllers/eventRegistration.controller';
+import EventRegistration, { IEventRegistration } from '../models/eventRegistration';
+import Ship, { IShip } from '../models/ship';
+import Event, { IEvent } from '../models/event';
+import User, { IUser } from '../models/user';
 
-  cronJob: CronJob;
-  /**
-   *
-   */
-  constructor() {
-    //0 1 * * * -> Does the job every 1 day at 1AM
-    this.cronJob = new CronJob('0 1 * * * *', async () => {
-      try {
-        await this.checktask();
-      } catch (e) {
-        console.error(e);
-      }
-    });
+export const EmailReminder = async () =>{
+  var nowDate = endOfDay(new Date());
+  const result = addDays(nowDate, 4);
 
-    // Start job
-    if (!this.cronJob.running) {
-      this.cronJob.start();
+  const returnedEvents = await Event.find({ //query today up to 4 days ahead
+    eventStart: {
+        $gte: nowDate, 
+        $lt: result
     }
-  }
+  }); 
+  if(!returnedEvents) return;
+  const eventID = returnedEvents.filter(function (el){ 
+    return el.eventId;
+  });
+  const res = returnedEvents.filter(({ eventId }) => eventId).map(({ eventId }) => eventId);
 
-  async checktask(): Promise<void> {
-  /*  const user = await UserRepo.findById(this.emailId)
-    const event = await EventRepo.findById(this.eventId);
-
-    //Define min and max database of checking of events
-    const max = new Date();
-    const min = new Date();
-    min.setDate(min.getDate() - 3);
-
-    //Find the events that has not been checked
-    const nonCheckedEvents = await EventRepo.findCheckedEvent();
-    //add validation
-
-    const email = await transporter.sendMail({
+ console.log(res);
+  returnedEvents.forEach(function() {
+    /*
+    const email = transporter.sendMail({
       from: '"Tregatta/Oxbridge" <oxbridge.noreply@gmail.com>',
-      to: user.emailUsername,
-      subject: "Dear Participant, you are now registered for: " + event.name,
-      html: `<h1>Email Confirmation</h1>
-              <h2>Hello ${user.firstname}</h2>
-              <p>Thank you for signing up on ${event.name}. Your event starts at: ${event.eventStart}</p>
-              </div>`,
+      to: 'user.emailUsername',
+      subject: "Event Reminder",
+      text: "Your temporary password is: " ,
       headers: { 'x-myheader': 'Tregatta/Oxbridge Event' }
-
-    }).catch((err: any) => console.log(err)); */
-  }
+  
+    }).catch((error: any) => {
+      console.error(error);
+    });*/
+  });
+  
+ // console.log(returnedEvents);
 }
-
-const emailReminder = new EmailReminder();

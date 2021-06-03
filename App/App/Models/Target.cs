@@ -4,7 +4,7 @@ namespace Oxbridge.App.Models
 {
     public static class Target
     {
-        private const String azure = "http://192.168.1.190:3000/api/";
+        private const String azure = "http://192.168.87.133:3000/api/";
 
         public const String StandardAdress = azure;
 
