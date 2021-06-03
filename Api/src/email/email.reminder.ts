@@ -39,3 +39,5 @@ export const EmailReminder = async () =>{
   
  // console.log(returnedEvents);
 }
+
+export default EmailReminder;

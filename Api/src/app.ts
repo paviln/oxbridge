@@ -8,7 +8,7 @@ import mongoose from 'mongoose';
 import routes from './routes';
 import dotenv from 'dotenv';
 import * as cron from 'node-cron';
-import {EmailReminder} from './email/email.reminder';
+import {SendEventReminder} from './Services/EventService';
 const app = express();
 
 const env = dotenv.config({path: __dirname + '/.env'});
@@ -36,13 +36,9 @@ mongoose.connect('mongodb://localhost:27017/OxbridgeDB');
 //  ROUTING
 app.use('/api', routes);
 
-EmailReminder();
-
 //Run every 5 ish sec */10 0 0 * * *
 cron.schedule('0 0 0 * * *', () => {
-
-  
-  console.log('running a task every minute at the 5th second');
+  SendEventReminder();
 });
 
 //  SERVER START

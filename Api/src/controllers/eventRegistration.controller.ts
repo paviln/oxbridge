@@ -9,8 +9,6 @@ var bcrypt = require('bcryptjs');
 
 // Create and Save a new EventRegistration
 const create = (req: Request, res: Response) => {
-
-
   // Creating the eventRegistration
   var registration = new EventRegistration(req.body);
   createRegistration(registration, res, function (err: any, registration: IEventRegistration) {
