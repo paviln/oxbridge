@@ -1,5 +1,5 @@
 
-import { getEmailInfo, mailOptions } from '../config/config';
+import {mailOptions} from '../config/config';
 import nodemailer from 'nodemailer';
 
 //Instantiate the SMTP server

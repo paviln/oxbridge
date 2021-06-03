@@ -2,10 +2,7 @@
 import User, {IUser} from '../models/user';
 import Ship, {IShip} from '../models/ship';
 import Event, {IEvent} from '../models/event';
-import {Request, Response} from 'express';
-import {Types} from "mongoose";
 import {transporter} from './index'
-import { getEmailInfo } from '../config/config';
 /**
  * Class EmailConfirmation
  * That sends an confirmation email 

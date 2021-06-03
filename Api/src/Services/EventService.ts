@@ -5,21 +5,19 @@ import Ship from '../models/ship';
 import User, {IUser} from '../models/user';
 import {SendReminder} from '../Services/EmailService';
 
-const GetEventParticipents = async (eventId: number): Promise<IUser[]> => {
-  var participants: IUser[] = [];
+const GetEventParticipents = async (eventId: number) => {
   const eventRegistrations = await EventRegistration.find({ eventId: eventId });
   if (!eventRegistrations || eventRegistrations.length === 0) throw new Error("No registrations found for event with eventId: " + eventId);
-
-  eventRegistrations.forEach(async (eventRegistration) => {
-    const ship = await Ship.findOne({ shipId: eventRegistration.shipId });
+  var participants: IUser[] = [];
+  for(var i = 0; i < eventRegistrations.length; i++) {
+    const ship = await Ship.findOne({ shipId: eventRegistrations[i].shipId });
     if (ship) {
-      const user = await User.findOne({ emailUsername: ship.emailUsername });
+      const user = await User.findOne({ emailUsername: ship.emailUsername });      
       if (user) {
         participants.push(user);
       }
     }
-  });
-
+  }
   return participants;
 }
 
@@ -34,7 +32,6 @@ const SendEventReminder = async () => {
         $lt: extendDate,
     }
   }); 
-
   if (returnedEvents)
   returnedEvents.forEach(async (event) => {
     const participents: IUser[] = await GetEventParticipents(event.eventId);
@@ -45,7 +42,6 @@ const SendEventReminder = async () => {
     }
   });
 }
-
 export {
   SendEventReminder,
 }

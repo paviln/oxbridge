@@ -8,7 +8,7 @@ const SendReminder = async (emailUsername: string, date: Date) => {
     from: '"Tregatta/Oxbridge" <oxbridge.noreply@gmail.com>',
     to: emailUsername,
     subject: "Reminder",
-    text: "You have a event witch starts the: " + date,
+    text: "You have a event which starts the: " + date,
     headers: { 'x-myheader': 'Tregatta/Oxbridge Event Reminder' }
 
   }).catch((error: any) => {
