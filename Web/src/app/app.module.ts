@@ -45,8 +45,8 @@ import { AlertComponent } from './components/alert/alert.component';
     AlertComponent
   ],
   imports: [
-    BrowserModule,
     AppRoutingModule,
+    BrowserModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
@@ -54,7 +54,7 @@ import { AlertComponent } from './components/alert/alert.component';
     NgbModule,
     FontAwesomeModule
   ],
-  providers: [AuthGuard, CookieService],
+  providers: [AuthGuard, CookieService, AppComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {

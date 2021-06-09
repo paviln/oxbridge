@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from 'src/app/models/user';
-import { UserService } from 'src/app/services/user.service';
+import { User } from '../../models/user';
+import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
-import { AppComponent } from 'src/app/app.component';
+import { AppComponent } from '../../app.component';
 
 @Component({
   selector: 'app-registration',

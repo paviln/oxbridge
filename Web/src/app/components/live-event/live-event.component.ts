@@ -1,12 +1,12 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap, startWith, race } from 'rxjs/operators';
-import { EventService } from 'src/app/services/event.service';
+import { EventService } from '../../services/event.service';
 import { Event } from '../../models/event';
-import { RacePointService } from 'src/app/services/race-point.service';
+import { RacePointService } from '../../services/race-point.service';
 import { Observable, interval } from 'rxjs';
-import { Score } from 'src/app/models/score';
-import { LocationRegistrationService } from 'src/app/services/location-registration.service';
+import { Score } from '../../models/score';
+import { LocationRegistrationService } from '../../services/location-registration.service';
 
 @Component({
   selector: 'app-live-event',

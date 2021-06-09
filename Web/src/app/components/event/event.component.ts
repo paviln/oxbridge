@@ -2,13 +2,13 @@ import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { Event } from '../../models/event';
 import { Score } from '../../models/score';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { EventService } from 'src/app/services/event.service';
+import { EventService } from '../../services/event.service';
 import { switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { RacePointService } from 'src/app/services/race-point.service';
-import { LocationRegistrationService } from 'src/app/services/location-registration.service';
-import { EventRegistrationService } from 'src/app/services/event-registration.service';
-import { Participant } from 'src/app/models/participant';
+import { RacePointService } from '../../services/race-point.service';
+import { LocationRegistrationService } from '../../services/location-registration.service';
+import { EventRegistrationService } from '../../services/event-registration.service';
+import { Participant } from '../../models/participant';
 
 
 @Component({

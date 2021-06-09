@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, combineLatest } from 'rxjs';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { EventService } from 'src/app/services/event.service';
+import { EventService } from '../../services/event.service';
 import { switchMap, tap, startWith, map } from 'rxjs/operators';
 import { Event } from '../../models/event';
 import { FormGroup, FormControl, FormBuilder, Validators, NgForm } from '@angular/forms';
 import { formatDate } from '@angular/common';
-import { Participant } from 'src/app/models/participant';
-import { EventRegistrationService } from 'src/app/services/event-registration.service';
+import { Participant } from '../../models/participant';
+import { EventRegistrationService } from '../../services/event-registration.service';
 import { Router } from '@angular/router';
 
 

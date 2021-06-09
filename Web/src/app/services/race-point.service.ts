@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { CheckPoint } from '../models/check-point';
 import { RacePoint } from '../models/race-point';
 import { CookieService } from 'ngx-cookie-service';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'

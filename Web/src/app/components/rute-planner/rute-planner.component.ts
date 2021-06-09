@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { CheckPoint } from 'src/app/models/check-point';
+import { CheckPoint } from '../../models/check-point';
 import { Event } from '../../models/event';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
-import { EventService } from 'src/app/services/event.service';
-import { RacePointService } from 'src/app/services/race-point.service';
-import { RacePoint } from 'src/app/models/race-point';
+import { EventService } from '../../services/event.service';
+import { RacePointService } from '../../services/race-point.service';
+import { RacePoint } from '../../models/race-point';
 import { Location } from '@angular/common';
 
 @Component({
