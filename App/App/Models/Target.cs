@@ -4,9 +4,9 @@ namespace Oxbridge.App.Models
 {
     public static class Target
     {
-        private const String azure = "http://192.168.1.190:3000/";
+        private const String azure = "http://192.168.87.133:3000/api/";
 
-        private const String StandardAdress = azure;
+        public const String StandardAdress = azure;
 
 
         public const String Authenticate = StandardAdress + "users/login";
@@ -19,5 +19,7 @@ namespace Oxbridge.App.Models
         public const String ReplayLocations = StandardAdress + "locationRegistrations/getReplay/";
         public const String Ships = StandardAdress + "ships/";
         public const String ShipFromEventId = StandardAdress + "ships/fromeventid/";
+        public const String ShipGetImage = StandardAdress + "ships/getImage/";
+        public const String ShipUploadImage = StandardAdress + "ships/uploadImage/";
     }
 }

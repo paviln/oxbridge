@@ -6,7 +6,7 @@ export class User {
     public username:string;
     public password:string;
     public confirmPassword:string;
-    public token:string;
+    public token?:string;
     public role:string;
     constructor(){}
 }

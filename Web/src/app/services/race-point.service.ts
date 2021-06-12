@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { CheckPoint } from '../models/check-point';
 import { RacePoint } from '../models/race-point';
 import { CookieService } from 'ngx-cookie-service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class RacePointService {
 
   // private racepointUrl = 'https://oxbridgecloud.azurewebsites.net/racepoints/';
 
-  private racepointUrl = 'http://localhost:3000//racepoints/';
+  private racepointUrl = environment.baseApiUrl+'racepoints/';
   
   constructor(private http: HttpClient, private cookieService: CookieService) { }
 

@@ -14,12 +14,14 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { AdminEventComponent } from './components/admin-event/admin-event.component';
 import { RutePlannerComponent } from './components/rute-planner/rute-planner.component';
 import { LiveEventComponent } from './components/live-event/live-event.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 
 const routes: Routes = [
   { path: 'hjem', component: HomeComponent },
   { path: 'events', component: EventsComponent },
   { path: 'omos', component: AboutComponent },
   { path: 'tilmelding', component: RegistrationComponent },
+  { path: 'forgotpw', component: ForgotPasswordComponent },
   { path: 'logind', component: LoginComponent },
   { path: 'mineEvents', component: UserDashboardComponent, canActivate: [AuthGuard], data: {expectedRole: 'user' }},
   { path: 'administrerEvents', component: AdminDashboardComponent, canActivate: [AuthGuard], data: {expectedRole: 'admin' }},

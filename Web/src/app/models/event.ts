@@ -9,6 +9,7 @@ export class Event {
         public eventStartTime?: string, 
         public eventEndTime?: string, 
         public isLive?:boolean, 
-        public actualEventStart?: string
+        public actualEventStart?: string,
+        public message?: string
         ){}
 }
