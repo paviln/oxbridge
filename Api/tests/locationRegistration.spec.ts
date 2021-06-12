@@ -1,5 +1,5 @@
-let mongoose = require("mongoose");
-let LocationRegistration = require('../models/locationRegistration.js');
+import mongoose from 'mongoose';
+import LocationRegistration from '../src/models/locationRegistration';
 
 let chai = require('chai');
 let chaiHttp = require('chai-http');

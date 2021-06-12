@@ -1,9 +1,8 @@
-let mongoose = require("mongoose");
-let Event = require('../models/event.js');
+import mongoose from 'mongoose';
+import Event from '../src/models/event.js';
 
-let chai = require('chai');
-let chaiHttp = require('chai-http');
-let server = require('../server.js'); // our server.js
+import chai from 'chai';
+import chaiHttp from 'chai-http';
 let should = chai.should();
 
 chai.use(chaiHttp);
