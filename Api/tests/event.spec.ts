@@ -1,6 +1,6 @@
+import {describe, it} from '@jest/globals'
 import mongoose from 'mongoose';
 import Event from '../src/models/event.js';
-
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 let should = chai.should();
