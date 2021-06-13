@@ -8,7 +8,7 @@ import mongoose from 'mongoose';
 import routes from './routes';
 import dotenv from 'dotenv';
 import * as cron from 'node-cron';
-import {SendEventReminder} from './Services/EventService';
+import {SendEventReminder} from './services/EventService';
 const app = express();
 
 const env = dotenv.config({path: __dirname + '/.env'});
@@ -17,12 +17,14 @@ if (env.error) {
 }
 app.use(cors());
 
+/*
 // Parse body params and attache them to req.body.
-app.use(bodyParser.json({limit: '50mb'}));
+app.use(express.json({limit: '50mb'}));
 const options = {limit: '50mb', extended: true, parameterLimit: 50000};
-app.use(bodyParser.urlencoded(options));
+app.use(express.urlencoded(options));
 
 app.use(helmet());
+*/
 
 app.use(express.static('public'));
 
