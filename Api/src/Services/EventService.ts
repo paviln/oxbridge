@@ -3,7 +3,7 @@ import Event, {IEvent} from '../models/event';
 import EventRegistration from '../models/eventRegistration';
 import Ship from '../models/ship';
 import User, {IUser} from '../models/user';
-import {SendReminder} from './emailService';
+import {SendReminder} from './EmailService';
 
 const GetEventParticipents = async (eventId: number) => {
   const eventRegistrations = await EventRegistration.find({ eventId: eventId });
