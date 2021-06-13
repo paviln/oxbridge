@@ -1,7 +1,8 @@
 import nodemailer from 'nodemailer';
-import {mailOptions} from '../config/config';
+import {mailConfigTest, mailOptions} from '../config/config';
 
-const transporter = nodemailer.createTransport(mailOptions);
+const env = process.env.NODE_ENV;
+const transporter = nodemailer.createTransport(env === 'production' ? mailOptions : mailConfigTest);
 
 const SendReminder = async (emailUsername: string, date: Date) => {
   const email = await transporter.sendMail({

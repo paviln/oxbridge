@@ -36,3 +36,13 @@ export const mailOptions = {
       pass: 'Oxbridge1234!'
   },
 }
+
+export const mailConfigTest = {
+  host: "smtp.ethereal.email",
+  port: 587,
+  secure: false,
+  auth: {
+      user: 'haylee.price@ethereal.email',
+      pass: 'mRmv9EXz97jZHjr5JJ'
+  },
+}
