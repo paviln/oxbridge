@@ -2,10 +2,7 @@
 import User, {IUser} from '../models/user';
 import Ship, {IShip} from '../models/ship';
 import Event, {IEvent} from '../models/event';
-import {Request, Response} from 'express';
-import {Types} from "mongoose";
 import {transporter} from './index'
-import { getEmailInfo } from '../config/config';
 /**
  * Class EmailConfirmation
  * That sends an confirmation email 
@@ -38,15 +35,12 @@ export default class EmailConfirmation{
        
         const ship = await Ship.findOne({shipId: this.shipId});
         if(!ship) return;
-       
         const user = await User.findOne({emailUsername: ship.emailUsername});
         if(!user) return;
-    
         const event = await Event.findOne({eventId: this.eventId});
         if(!event) return;
-        
         const emaild = await transporter.sendMail({
-            from: 'oxbridge.noreply@gmail.com',
+            from: '"Tregatta/Oxbridge" <oxbridge.noreply@gmail.com>',
             to: user.emailUsername,
             subject: 'Dear Participant, you are now registered for: ' + event.name,
             html: `<h1>Email Confirmation</h1>

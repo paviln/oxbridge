@@ -23,7 +23,7 @@ import { RutePlannerComponent } from './components/rute-planner/rute-planner.com
 import { LiveEventComponent } from './components/live-event/live-event.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
-import { AlertComponent } from './components/alert/alert.component';
+
 
 @NgModule({
   declarations: [
@@ -41,12 +41,11 @@ import { AlertComponent } from './components/alert/alert.component';
     AdminEventComponent,
     RutePlannerComponent,
     LiveEventComponent,
-    ForgotPasswordComponent,
-    AlertComponent
+    ForgotPasswordComponent
   ],
   imports: [
-    BrowserModule,
     AppRoutingModule,
+    BrowserModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
@@ -54,7 +53,7 @@ import { AlertComponent } from './components/alert/alert.component';
     NgbModule,
     FontAwesomeModule
   ],
-  providers: [AuthGuard, CookieService],
+  providers: [AuthGuard, CookieService, AppComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {

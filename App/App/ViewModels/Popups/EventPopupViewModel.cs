@@ -172,12 +172,23 @@ namespace Oxbridge.App.ViewModels.Popups
         {
             if (selectedShip != null)
             {
-                Ship tempSelectedShip = selectedShip;
-                SelectedShip = null;
-                var image = await serverClient.GetImage(tempSelectedShip.ShipId);
-                tempSelectedShip.Img = image;
-                await PopupNavigation.PushAsync(new LoadingPopupView());
-                await PopupNavigation.PushAsync(new ShipPopupView(tempSelectedShip));
+                try
+                {
+                    Ship tempSelectedShip = selectedShip;
+                    SelectedShip = null;
+                    var image = await serverClient.GetImage(tempSelectedShip.ShipId);
+                    if (image != null)
+                    {
+                        tempSelectedShip.Img = image;
+                        await PopupNavigation.PushAsync(new LoadingPopupView());
+                        await PopupNavigation.PushAsync(new ShipPopupView(tempSelectedShip));
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"NavigateToShip THREW: {e.Message}");
+                }
+
             }
         }
 

@@ -1,5 +1,18 @@
-��# oxbridge
+#Oxbridge
 
+-------------------------------------------------------------------
+Enviroment File
+----------------------------------------------------------------
+
+jwtSectetKey=
+
+//EMAIL
+MAIL_USERNAME=
+MAIL_PASSWORD=
+OAUTH_CLIENTID=
+OAUTH_CLIENT_SECRET=
+OAUTH_REFRESH_TOKEN=
+REDIRCT_URL=
 
 
 -------------------

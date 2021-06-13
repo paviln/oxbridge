@@ -1,4 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { UserDashboardComponent } from './user-dashboard.component';
 
@@ -8,7 +11,8 @@ describe('UserDashboardComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UserDashboardComponent ]
+      declarations: [ UserDashboardComponent ],
+      imports: [RouterModule, FormsModule, ReactiveFormsModule, HttpClientTestingModule]
     })
     .compileComponents();
   }));

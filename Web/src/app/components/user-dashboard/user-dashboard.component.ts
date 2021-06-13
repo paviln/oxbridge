@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, combineLatest } from 'rxjs';
 import { FormControl, NgForm } from '@angular/forms';
-import { EventService } from 'src/app/services/event.service';
+import { EventService } from '../../services/event.service';
 import { startWith, map } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
-import { MyEvents } from 'src/app/models/my-events';
-import { EventSignUp } from 'src/app/models/event-sign-up';
-import { Ship } from 'src/app/models/ship';
-import { ShipService } from 'src/app/services/ship.service';
-import { EventRegistrationService } from 'src/app/services/event-registration.service';
+import { MyEvents } from '../../models/my-events';
+import { EventSignUp } from '../../models/event-sign-up';
+import { Ship } from '../../models/ship';
+import { ShipService } from '../../services/ship.service';
+import { EventRegistrationService } from '../../services/event-registration.service';
 
 @Component({
   selector: 'app-user-dashboard',

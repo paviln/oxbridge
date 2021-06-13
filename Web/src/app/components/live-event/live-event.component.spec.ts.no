@@ -1,14 +1,24 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterModule } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import createGoogleMapsMock from 'jest-google-maps-mock';
 
 import { LiveEventComponent } from './live-event.component';
 
 describe('LiveEventComponent', () => {
   let component: LiveEventComponent;
   let fixture: ComponentFixture<LiveEventComponent>;
+  let google;
+  
+  beforeEach(() => {
+    google = createGoogleMapsMock();
+  });
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LiveEventComponent ]
+      declarations: [ LiveEventComponent ],
+      imports: [RouterModule, RouterTestingModule, HttpClientTestingModule]
     })
     .compileComponents();
   }));
