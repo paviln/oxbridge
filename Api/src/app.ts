@@ -8,7 +8,7 @@ import mongoose from 'mongoose';
 import routes from './routes';
 import dotenv from 'dotenv';
 import * as cron from 'node-cron';
-import {SendEventReminder} from './services/EventService';
+import {SendEventReminder} from './services/eventService';
 const app = express();
 
 const env = dotenv.config({path: __dirname + '/.env'});
