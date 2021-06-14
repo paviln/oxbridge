@@ -38,6 +38,6 @@ export class ForgotPasswordComponent implements OnInit {
       this.userService.forgotPassword(this.f.email.value)
           .pipe(first())
           .pipe(finalize(() => this.loading = false))
-          .subscribe();          
+          .subscribe()   
   }
 }

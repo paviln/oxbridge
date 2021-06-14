@@ -13,19 +13,23 @@ const ship = {
   img: [
     {
       data: 23423,
-      contentType: 'test file'
+      contentType: 'image/png'
     }
   ],
 };
 
 describe("POST /uploadImage - post image of ship", () => {
   it("Upload Image API Request", async () =>{
-    const result = await request(api.uploadImage).post("/api/ships/uploadImage");
-    expect(result.text).toEqual(ship);
-    expect(result.status).toEqual(200);
+    const result = await (await request(api).post("/api/ships/uploadImage").send({ship}));
+    expect(result.body).toEqual({ship});
+    expect(result.status).toEqual(204);
   });
 });
 
-
-
-
+describe("POST should not insert if shipID is not found", () => {
+  it("Upload Image API Request", async () =>{
+    const result = await request(api).post("/api/ships/uploadImage").send({ship});
+    expect(result.body).toEqual("Ship not found with shipId: " + ship.shipId)
+    expect(result.status).toEqual(404);
+  });
+});

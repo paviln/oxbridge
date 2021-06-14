@@ -8,13 +8,13 @@ const api = eventController;
 
 const event = {
   eventId: 1,
-  messages: "test"
+  messages: "test message"
 }
 
 describe("POST /sendMessage/- admin post broadcast to event", () => {
   it("Upload broadcast API Request", async () =>{
-    const result = await request(api.sendMessage).post("/api/events/sendMessage/");
-    expect(result.text).toEqual(event);
+    const result = await request(app).post("/api/events/sendMessage/").send({event});
+    expect(result.body).toEqual({event});
     expect(result.status).toEqual(200);
   });
 });

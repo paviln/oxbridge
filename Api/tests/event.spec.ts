@@ -7,13 +7,13 @@ let should = chai.should();
 
 chai.use(chaiHttp);
 
-const pathToEvents = ('/events');
+const pathToEvents = ('/api/events');
 const numberOfEvents = 4;
  
 
 describe('GET ALL events', () => {
     it('TEST # 1 - it should GET all the events', (done) => {
-      chai.request('http://192.168.1.104:3000')
+      chai.request('http://192.168.87.133:3000')
           .get(pathToEvents)
           .end((err, res) => {
                 res.should.have.status(200);

@@ -13,8 +13,8 @@ const user = {
 
 describe("POST /forgotPassword - reset password of user", () => {
   it("Forgot Password API Request", async () => {
-    const result = await request(app).post("/api/user/forgotPassword");
-    expect(result.text).toEqual(user);
+    const result = await request(app).post("/api/user/forgotPassword").send({user});
+    expect(result.body).toEqual({user});
     expect(result.status).toEqual(200);
   });
 });
