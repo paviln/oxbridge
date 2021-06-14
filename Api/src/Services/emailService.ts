@@ -15,7 +15,7 @@ const SendReminder = async (emailUsername: string, date: Date) => {
   }).catch((error: any) => {
     console.error(error);
   });
-
+  
   return email;
 }
 

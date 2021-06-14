@@ -88,6 +88,8 @@ const registerAdmin = (req: Request, res: Response) => {
 // Register a new user and return token
 const register = (req: Request, res: Response) => {
 
+
+    console.log(req.body.emailUsername);
     // Checking that no user with that username exists
     User.findOne({ emailUsername: req.body.emailUsername }, null, null, function (err, user) {
         if (err)
@@ -130,15 +132,23 @@ const login = (req: Request, res: Response) => {
     });
 };
 
+/**
+ * Gets  and check whether the user exists,
+ * if exists, change the user password to 1234 
+ * and call emailforgotpassword to send an email to the user
+ * with the new password.
+ * @param req 
+ * @param res 
+ */
 const forgotPassword = async (req: Request, res: Response) => {
     const user = await User.findOne({emailUsername: req.body.emailUsername});
-    if(!user) throw new Error("user not found");
+    if(!user) throw new Error("user not found"); //N(404)
 
     user.password = '1234';
     new EmailForgotPassword(user.emailUsername, user.password);
     await user.save();
 
-    res.status(200).send(user);
+    res.status(200).send(user); //Y (200)
 }
 
 export default {
