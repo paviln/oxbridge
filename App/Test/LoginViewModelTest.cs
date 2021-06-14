@@ -10,10 +10,12 @@ namespace Test
         [Fact]
         public void Can_Execute_ResetPasswordCommand()
         {
+            //Arrange
             viewModel = new LoginViewModel();
+            //Act
             var result = viewModel.ResetPasswordCommand.CanExecute(null);
-
-            result.Should().BeTrue();
+            //Assert
+            Assert.True(result);            
         }
     }
 }
