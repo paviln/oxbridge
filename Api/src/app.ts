@@ -13,13 +13,12 @@ const express = require('express');
 
 const app = express();
 
-const env = dotenv.config({path: __dirname + '/.env'});
+const env = dotenv.config({ path: './.env' });
 
 if (env.error) {
   throw new Error('Failed to load envirement config.');
 }
 app.use(cors());
-
 
 // Parse body params and attache them to req.body.
 app.use(express.json({limit: '50mb'}));
