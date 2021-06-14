@@ -1,4 +1,4 @@
-using Oxbridge.App.Data;
+﻿using Oxbridge.App.Data;
 using Oxbridge.App.Models;
 using Oxbridge.App.Services;
 using Oxbridge.App.ViewModels;
@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Test
 {
-    public class UnitTest1
+    public class Tests
     {
         #region -- Local variables --
         private ServerClient serverClient;
@@ -30,7 +30,7 @@ namespace Test
 
         #endregion
 
-        public UnitTest1()
+        public Tests()
         {
             serverClient = new ServerClient();
             dataController = new DataController();
@@ -225,12 +225,12 @@ namespace Test
             //Assert
             Assert.True(result);
         }
-        
+
         [Fact]
         public void Can_Execute_ResetPasswordCommand()
         {
             //Arrange
-            
+
             viewModel = new LoginViewModel();
             //Act
             var result = viewModel.ResetPasswordCommand.CanExecute(null);
@@ -239,4 +239,3 @@ namespace Test
         }
     }
 }
-
