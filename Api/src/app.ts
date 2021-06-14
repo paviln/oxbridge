@@ -14,7 +14,7 @@ const express = require('express');
 const app = express();
 
 const env = dotenv.config({path: __dirname + '/.env'});
-console.log(__dirname);
+
 if (env.error) {
   throw new Error('Failed to load envirement config.');
 }
