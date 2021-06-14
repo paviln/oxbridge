@@ -1,6 +1,6 @@
 import {describe, test, it, expect} from '@jest/globals';
 import * as app from "../src/app";
-import * as request from "supertest";
+import request from "supertest";
 import { IUser } from '../src/models/user';
 
 const user = {
@@ -15,6 +15,6 @@ describe("POST /forgotPassword - reset password of user", () => {
   it("Forgot Password API Request", async () => {
     const result = await request(app).post("/api/user/forgotPassword");
     expect(result.text).toEqual(user);
-    expect(result.statusCode).toEqual(200);
+    expect(result.status).toEqual(200);
   });
 });

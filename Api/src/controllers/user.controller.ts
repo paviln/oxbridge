@@ -88,6 +88,8 @@ const registerAdmin = (req: Request, res: Response) => {
 // Register a new user and return token
 const register = (req: Request, res: Response) => {
 
+
+    console.log(req.body.emailUsername);
     // Checking that no user with that username exists
     User.findOne({ emailUsername: req.body.emailUsername }, null, null, function (err, user) {
         if (err)

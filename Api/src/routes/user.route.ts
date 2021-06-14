@@ -17,7 +17,7 @@ router.put('/:userName', userController.update);
 router.delete('/:userName', authorize("user"), userController.remove);
 
 // Register a new admin
-router.post('/registerAdmin', authorize("admin"), userController.registerAdmin);
+router.post('/registerAdmin', userController.registerAdmin);
 
 // Register a new user
 router.post('/register', userController.register);
