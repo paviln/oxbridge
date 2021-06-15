@@ -225,7 +225,16 @@ namespace Test
             //Assert
             Assert.True(result);
         }
-
+        [Fact]
+        public void No_Reaply_Api_NewPassword()
+        {
+            //Arrange
+            string email = "paviln@outlook.dk";
+            //Act
+            var result = serverClient.ResetPassword(email).Result;
+            //Assert
+            Assert.False(result);
+        }
         [Fact]
         public void Can_Execute_ResetPasswordCommand()
         {
