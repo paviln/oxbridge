@@ -1,6 +1,4 @@
 import { transporter } from './index'
-import User, { IUser } from '../models/user';
-
 /**
  * EmailResetPassword sends an email to 
  * the user who forgot their password

@@ -3,10 +3,12 @@
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
     "types": [
-      "jasmine",
+      "jest",
       "node",
       "googlemaps"
-    ]
+    ],
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true
   },
   "files": [
     "src/test.ts",

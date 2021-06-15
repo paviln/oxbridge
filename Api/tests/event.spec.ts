@@ -1,20 +1,19 @@
-let mongoose = require("mongoose");
-let Event = require('../models/event.js');
-
-let chai = require('chai');
-let chaiHttp = require('chai-http');
-let server = require('../server.js'); // our server.js
+import {describe, it} from '@jest/globals'
+import mongoose from 'mongoose';
+import Event from '../src/models/event.js';
+import chai from 'chai';
+import chaiHttp from 'chai-http';
 let should = chai.should();
 
 chai.use(chaiHttp);
 
-const pathToEvents = ('/events');
+const pathToEvents = ('/api/events');
 const numberOfEvents = 4;
  
 
 describe('GET ALL events', () => {
     it('TEST # 1 - it should GET all the events', (done) => {
-      chai.request('http://192.168.1.104:3000')
+      chai.request('http://192.168.87.133:3000')
           .get(pathToEvents)
           .end((err, res) => {
                 res.should.have.status(200);

@@ -9,8 +9,6 @@ var bcrypt = require('bcryptjs');
 
 // Create and Save a new EventRegistration
 const create = (req: Request, res: Response) => {
-
-
   // Creating the eventRegistration
   var registration = new EventRegistration(req.body);
   createRegistration(registration, res, function (err: any, registration: IEventRegistration) {
@@ -107,10 +105,9 @@ const signUp = (req: Request, res: Response) => {
           
           createRegistration(registration, res, function (err: any, registration: IEventRegistration) {
             if (err)
-              return err;
-            console.log("hey");
+              return err;            
            
-            new EmailConfirmation(registration.eventId, registration.shipId);
+            new EmailConfirmation(registration.shipId, event.eventId);
             return res.status(201).json(registration);
           });
         }
@@ -158,7 +155,7 @@ const getParticipants = (req: Request, res: Response) => {
                   "eventRegId": eventRegistration.eventRegId
                 }
                 participants.push(participant);
-
+                  
                 if (pending === 0) {
                   return res.status(200).json(participants);
                 }

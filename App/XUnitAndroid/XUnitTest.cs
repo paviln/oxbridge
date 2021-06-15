@@ -107,5 +107,13 @@ namespace XUnitAndroid
                 return 0;
             }
         }
+        /// <summary>
+        /// Tests if a ResetPassword can be posted to the backend
+        /// </summary>
+        [Fact]
+        public void TestResetPassword()
+        {
+            
+        }
     }
 }

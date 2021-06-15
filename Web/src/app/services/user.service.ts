@@ -3,9 +3,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { User } from '../models/user';
-import * as decode from 'jwt-decode';
+import jwt_decode from 'jwt-decode';
 import { CookieService } from 'ngx-cookie-service';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -46,7 +46,7 @@ export class UserService {
    */
   getDecodedAccessToken(token: string): any {
     try {
-      return decode(token);
+      return jwt_decode(token);
     }
     catch (error) {
       return null;

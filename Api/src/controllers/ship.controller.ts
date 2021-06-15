@@ -120,17 +120,34 @@ const remove = (req: Request, res: Response) => {
     res.status(202).json(ship);
   });
 };
-
+/**
+ * Gets the ship by shipId
+ * and returns the ships image. 
+ * @param req 
+ * @param res 
+ */
 const getImage = async (req: Request, res: Response) => {
   const ship = await Ship.findOne({ shipId: +req.params.id }).select('img -_id');
   if (!ship) throw new NotFound("Ship with id " + req.params.id + " was not found.");
 
-  res.status(200).send(ship.img);
+  res.status(200).send(ship.img); //Y (200)
 }
 
+/**
+ * Gets ship with shipid and image, 
+ * if the ship exists, upload the image
+ * @param req 
+ * @param res 
+ * @returns 
+ */
 const uploadImage = async (req: Request, res: Response) => {
   const ship = await Ship.findOne({ shipId: +req.body.shipId });
-  if (!ship) throw new NotFound("Ship with id " + req.body.shipId + " was not found.");
+  if (!ship){
+    //throw new NotFound("Ship with id " + req.body.shipId + " was not found.");
+    return res.status(404).json({message: "Ship not found with shipId: " + req.params.shipId}) //N (404)
+    //send({ message: "Ship not found with shipId " + req.params.shipId });
+  }
+
   ship.img = {
     data: req.file.buffer,
     contentType: 'image/png',
@@ -138,7 +155,7 @@ const uploadImage = async (req: Request, res: Response) => {
 
   const result = await ship.save();
 
-  res.status(204).json(result);
+  res.status(204).json(result); //Y (204)
 }
 
 export default {

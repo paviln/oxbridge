@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Ship } from 'src/app/models/ship';
-import { User } from 'src/app/models/user';
+import { Ship } from '../../models/ship';
+import { User } from '../../models/user';
 import { CookieService } from 'ngx-cookie-service';
 import { HttpClient } from '@angular/common/http';
-import { ShipService } from 'src/app/services/ship.service';
-import { UserService } from 'src/app/services/user.service';
-import { AppComponent } from 'src/app/app.component';
+import { ShipService } from '../../services/ship.service';
+import { UserService } from '../../services/user.service';
+import { AppComponent } from '../../app.component';
 
 @Component({
   selector: 'app-profile',

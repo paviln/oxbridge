@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, NgForm } from '@angular/forms';
 import { Observable, combineLatest } from 'rxjs';
-import { Event } from 'src/app/models/Event';
-import { EventService } from 'src/app/services/event.service';
+import { Event } from '../../models/event';
+import { EventService } from '../../services/event.service';
 import { CookieService } from 'ngx-cookie-service';
 import { startWith, map } from 'rxjs/operators';
 

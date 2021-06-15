@@ -1,7 +1,7 @@
 import { Component, OnInit, NgModule } from '@angular/core';
-import { Event } from 'src/app/models/Event';
+import { Event } from '../../models/Event';
 import { Observable, combineLatest } from 'rxjs';
-import { EventService } from 'src/app/services/event.service';
+import { EventService } from '../../services/event.service';
 import { FormControl } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
 

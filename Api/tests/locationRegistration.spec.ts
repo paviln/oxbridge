@@ -1,9 +1,8 @@
-let mongoose = require("mongoose");
-let LocationRegistration = require('../models/locationRegistration.js');
-
-let chai = require('chai');
-let chaiHttp = require('chai-http');
-let server = require('../server.js'); // our server.js
+import {describe, it} from '@jest/globals'
+import mongoose from 'mongoose';
+import LocationRegistration from '../src/models/locationRegistration';
+import chai from 'chai';
+import chaiHttp from 'chai-http';
 let should = chai.should();
 
 chai.use(chaiHttp);
