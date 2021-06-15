@@ -10,7 +10,7 @@
   },
   "scripts": {
     "start": "tsc && node dist/app.js",
-    "test": "jest"
+    "test": "jest --watch"
   },
   "dependencies": {
     "@types/bcrypt": "^5.0.0",

@@ -1,9 +1,10 @@
-import {describe, test, it, expect} from '@jest/globals';
-import * as app from "../src/app";
+import {describe, test, it, expect, beforeEach} from '@jest/globals';
+import app from "../src/app";
 import request from "supertest";
 import { IShip } from '../src/models/ship';
 import shipController from '../src/controllers/ship.controller';
-
+import supertest from "supertest";
+import jest from "jest";
 const api = shipController;
 
 const ship = {
@@ -12,24 +13,47 @@ const ship = {
   name: "testbåd",
   img: [
     {
-      data: 23423,
+      data: [],
       contentType: 'image/png'
     }
   ],
 };
+const user = {
+  emailUsername: "paviln@outlook.dk",
+  password: "1234"
+}
+let token = {}
+const shipfail = {
+  shipId: 100
+}
 
-describe("POST /uploadImage - post image of ship", () => {
+beforeEach((done) => {
+  request(app)
+    .post('/login')
+    .send({
+      username: user.emailUsername,
+      password: user.password,
+    })
+    .end((err, response) => {
+      token = response.body.token; // save the token!
+      done();
+    });
+});
+
+describe("POST /uploadImage - post image of shi", () => {
   it("Upload Image API Request", async () =>{
-    const result = await (await request(api).post("/api/ships/uploadImage").send({ship}));
-    expect(result.body).toEqual({ship});
+    console.log(token);
+    const result = await supertest(app).post("/api/ships/uploadImage").send(ship).set('Authorization', `${token}`);
+
+    //expect(result.body).toEqual(ship.img);   
     expect(result.status).toEqual(204);
   });
 });
 
 describe("POST should not insert if shipID is not found", () => {
   it("Upload Image API Request", async () =>{
-    const result = await request(api).post("/api/ships/uploadImage").send({ship});
-    expect(result.body).toEqual("Ship not found with shipId: " + ship.shipId)
+    const result = await supertest(app).post("/api/ships/uploadImage").send(shipfail);
+    expect(result.body.message).toEqual("Ship not found with shipId: " + shipfail.shipId)
     expect(result.status).toEqual(404);
   });
 });

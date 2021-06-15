@@ -141,11 +141,12 @@ const getImage = async (req: Request, res: Response) => {
  * @returns 
  */
 const uploadImage = async (req: Request, res: Response) => {
+  console.log(req.body);
+  if (!req.body.shipId) throw new Error("Ship id not defined.");
+  
   const ship = await Ship.findOne({ shipId: +req.body.shipId });
   if (!ship){
-    //throw new NotFound("Ship with id " + req.body.shipId + " was not found.");
-    return res.status(404).json({message: "Ship not found with shipId: " + req.params.shipId}) //N (404)
-    //send({ message: "Ship not found with shipId " + req.params.shipId });
+    throw new NotFound("Ship with id " + req.body.shipId + " was not found."); //N (404)
   }
 
   ship.img = {
