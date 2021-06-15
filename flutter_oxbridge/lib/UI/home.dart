@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'add_user.dart';
 import 'eventPage.dart';
@@ -15,7 +14,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       body: Container(
         // adding background image in the main page
-        // for this need to add image in assets in pubspec.yaml 
+        // for this need to add image in assets in pubspec.yaml
         decoration: BoxDecoration(
             image: DecorationImage(
                 image: AssetImage("lib/img/pic.png"), fit: BoxFit.cover)),
