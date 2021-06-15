@@ -52,3 +52,4 @@ app.listen(process.env.PORT || 3000, () => {
 
 app.use(errorHandler);
 
+export default app;
