@@ -12,6 +12,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.teal,
       ),
+      debugShowCheckedModeBanner: false, // this remove debug banner
       home: Home(),
     );
   }

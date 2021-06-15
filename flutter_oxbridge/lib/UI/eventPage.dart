@@ -1,41 +1,70 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_oxbridge/Model/event.dart';
 import 'package:flutter_oxbridge/UI/Network/api.dart';
-class ShowEvent extends StatelessWidget {
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+ 
+class EventPage extends StatefulWidget {
+  @override
+  _EventState createState() => _EventState();
+}
+ 
+class _EventState extends State<EventPage> {
+  List<dynamic> _events = [];
+ 
+ @override
+ void initState() {
+   fetchData().then((value){
+       _events.addAll(value);
+     });
+   }
+ 
+  Future<List<dynamic>> fetchData() async{
+    var events = [];
+    var url ='http://10.0.2.2:3000/api/events';
+    var response = await http.get(Uri.parse(url));
+    var jsonMembers = json.decode(response.body);
+    setState(() {
+      events =  jsonMembers.map<Event>((json) => new Event.fromJson(json)).toList();
+    });
+    return events;
+  }
+
   @override
   Widget build(BuildContext context) {
-    
-    API api = new API(); // API object to call getEvent() method
+    print(_events.length);
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        title: Text("EVENTS"),
+        title: Text('EVENTS'),
       ),
-      
-      body: Container(
-          padding: EdgeInsets.all(16.0),
-          child: FutureBuilder(
-            future: api.fetchEvent(),
-            builder: (BuildContext ctx, AsyncSnapshot snapshot) {
-              if (snapshot.data == null) {
-                return Container(
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                );
-              } else {
-                return ListView.builder(
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (ctx, index) => ListTile(
-                    title: Text(snapshot.data[index].eventId),
-                    subtitle: Text(snapshot.data[index].eventStart),
-                    contentPadding: EdgeInsets.only(bottom: 20.0),
-                  ),
-                );
-              }
-            },
-          ),
-        ),
+      body:   ListView.builder(
+                    itemBuilder: (context,index){
+                      return Card(
+                        child: Container(
+                          //height: 1
+                          padding: EdgeInsets.all(15),
+                          child:  Column(
+                            children: <Widget>[
+                              Text(_events[index].eventId.toString()),
+                              Text(_events[index].name),
+                              Text(_events[index].eventStart),
+                              Text(_events[index].eventEnd),
+                              Text(_events[index].city),
+                              Text(_events[index].eventCode),
+                              Text(_events[index].messages.toString()),
+                              
+                            ],
+                          ),
+                        ),
+                      );
+ 
+                     },
+                      itemCount: _events.length,
+                    ),
+ 
+
     );
   }
 }

@@ -4,12 +4,22 @@ import 'package:flutter_oxbridge/Model/user.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 
+import 'package:http/http.dart';
+
+class Resource<T> {
+  final String url; 
+  T Function(Response response) parse;
+
+  Resource({required this.url,required this.parse});
+}
+
 // Has all the methods to connect to the server
 class API {
+  static String apiurl = "http://10.0.2.2:3000/api/";
   // 10.0.2.2 can be used instead of localhost for emulator to connect
   static Future<User> createUser(String firstname, String lastname,
       String emailUsername, String password) async {
-    final String url = "http://10.0.2.2:3000/users/register";
+    final String url = "http://10.0.2.2:3000/api/users/register";
     final response = await http.post(Uri.parse(url),
         headers: <String, String>{
           'Content-Type': 'application/json;charset=UTF-8'
@@ -28,32 +38,27 @@ class API {
       throw Exception(response.body);
     }
   }
-
-  Future<List<Event>> fetchEvent() async {
-    // Events fetch method
-    //'https://jsonplaceholder.typicode.com/users'
-    //final response = await http.get(Uri.http('jsonplaceholder.typicode.com', '/users'));
-      final response = await http.get(Uri.http('10.0.2.2:3000', '/events'));
-      var responseData = json.decode(response.body);
-      List<Event> events = [];
-    for (var singleUser in responseData) {
-      Event event = Event(
-       // name: singleUser["name"],
-       // email: singleUser["email"],
-       // username: singleUser["username"],
-        eventId: singleUser["eventId"],
-        eventStart: singleUser["eventStart"],
-        eventEnd: singleUser["eventEnd"],
-        city: singleUser["city"],
-        eventCode: singleUser["eventCode"],
-        actualEventStart: singleUser["actualEventStart"],
-        isLive: singleUser["isLive"],
-
-      );
-
-      //Adding user to the list.
-      events.add(event);
-    }
-    return events;
-  }
+    
+      Future<T> load<T>(Resource<T> resource) async {
+        final uri = Uri.parse(resource.url);
+        final response = await http.get(uri);
+        if(response.statusCode == 200) {
+          return resource.parse(response);
+        } else {
+          throw Exception('Failed to load data!');
+        }
+      }
+      static Resource<List<Event>> get all {
+        
+        return Resource(
+          url: apiurl + "event",
+          parse: (response) {
+            final result = json.decode(response.body); 
+            Iterable list = result['events'];
+            return list.map((model) => Event.fromJson(model)).toList();
+          }
+        );
+      }
+    
 }
+
