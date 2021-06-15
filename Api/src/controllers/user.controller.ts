@@ -148,7 +148,7 @@ const forgotPassword = async (req: Request, res: Response) => {
     new EmailForgotPassword(user.emailUsername, user.password);
     await user.save();
 
-    res.status(404); //Y (200)
+    res.status(200).send(); //Y (200)
 }
 
 export default {
