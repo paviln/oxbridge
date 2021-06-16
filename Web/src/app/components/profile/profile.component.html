@@ -1,3 +1,4 @@
+  
 <div id="image">
     <div class="container h-100 align-items-start">
         <div class="row h-100 align-items-end pb-4">
@@ -18,25 +19,42 @@
             <form class="form" #updateUserForm="ngForm" (ngSubmit)="OnSubmit()">
                 <div class="row ml-5 mb-2">
                     <div class="col-xsm">
-                        <input type="text" class="form-control" placeholder="Fornavn" required
-                            [(ngModel)]="user.firstname" #firstname="ngModel" name="firstname">
+                        <input type="text" [(ngModel)]="user.firstname" formControlName="firstName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" />
+                        <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
+                            <div *ngIf="f.firstName.errors.required">First Name is required</div>
+                        </div>
                     </div>
                     <div>
-                        <input type="text" class="form-control ml-3" placeholder="Efternavn" required
-                            [(ngModel)]="user.lastname" #lastname="ngModel" name="lastname">
+                        <input type="text"  [(ngModel)]="user.lastname" formControlName="lastName"  class="form-control" [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" pattern="^[a-zA-ZÆØÅæøå ]*">
+                        <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">
+                            <div *ngIf="f.lastName.errors.required">Efternavnet mangler</div>
+                            <div *ngIf="f.lastName.errors.pattern">Efternavnet må kun indeholde bogstaver</div>
+                        </div>                    
                     </div>
                 </div>
-                <div class="row ml-5 mb-2">
-                    <div class="col-xsm">
-                        <input type="password" class="psw form-control" placeholder="Gamle adgangskode">
+                
+                <div class="form-row">
+                    <div class="form-group col">
+                        <label>Password</label>
+                        <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+                        <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                            <div *ngIf="f.password.errors.required">Password is required</div>
+                            <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
+                        </div>
                     </div>
-                    <div>
-                        <input type="password" class="psw form-control ml-3" placeholder="Ny adgangskode">
+                    <div class="form-group col">
+                        <label>Confirm Password</label>
+                        <input type="password" formControlName="confirmPassword" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" />
+                        <div *ngIf="submitted && f.confirmPassword.errors" class="invalid-feedback">
+                            <div *ngIf="f.confirmPassword.errors.required">Confirm Password is required</div>
+                            <div *ngIf="f.confirmPassword.errors.mustMatch">Passwords must match</div>
+                        </div>
                     </div>
-                </div>
+                </div>  
+
                 <div class="row ml-5">
                     <div>
-                        <input type="text" class="form-control" placeholder="Email" required
+                        <input type="text" class="form-control"readonly placeholder="Email" required
                             [(ngModel)]="user.emailUsername" #emailUsername="ngModel" name="emailUsername">
                     </div>
                     <div>
