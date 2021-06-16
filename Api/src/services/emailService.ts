@@ -21,7 +21,12 @@ const sendReminder = async (emailUsername: string, date: Date) => {
   
   return email;
 }
-
+/**
+ * Sends out a confirmation email to the participant registered to an event
+ * @param shipId 
+ * @param eventId 
+ * @returns 
+ */
 const emailConfirmation = async (shipId: number, eventId: number) => {       
   const ship = await Ship.findOne({shipId: shipId});
   if(!ship) return;
@@ -40,7 +45,10 @@ const emailConfirmation = async (shipId: number, eventId: number) => {
       headers: { 'x-myheader': 'Tregatta/Oxbridge Event' }
   }).catch((err: any) => console.log(err));
 }
-
+/**
+ * Sends out a new password to the user who registered a new password sent to email
+ * @param emailUsername 
+ */
 const sendPassword = async (emailUsername: string) => {
   const email = await transporter.sendMail({
     from: '"Tregatta/Oxbridge" <oxbridge.noreply@gmail.com>',
