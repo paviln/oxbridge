@@ -42,7 +42,6 @@ beforeEach((done) => {
 
 describe("POST /uploadImage - post image of shi", () => {
   it("Upload Image API Request", async () =>{
-    console.log(token);
     const result = await supertest(app).post("/api/ships/uploadImage").send(ship).set('Authorization', `${token}`);
 
     //expect(result.body).toEqual(ship.img);   

@@ -23,6 +23,10 @@ const EventSchema: Schema = new Schema({
   eventCode: String,
   actualEventStart: Date,
   isLive: Boolean,
+  checked: {
+    type: Boolean,
+    default: false,
+  },
   eventRegId: Number,
   messages: [String],
 });

@@ -141,7 +141,6 @@ const getImage = async (req: Request, res: Response) => {
  * @returns 
  */
 const uploadImage = async (req: Request, res: Response) => {
-  console.log(req.body);
   if (!req.body.shipId) throw new Error("Ship id not defined.");
   
   const ship = await Ship.findOne({ shipId: +req.body.shipId });
