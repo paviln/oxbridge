@@ -81,7 +81,9 @@ namespace Oxbridge.App.ViewModels
                 PopupNavigation.PopAllAsync();
             }
         }
-
+        /*
+        /// Method to reset the users password and sends the email to the api
+        */
         private async void ResetPassword()
         {
             await serverClient.ResetPassword(Username);

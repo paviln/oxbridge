@@ -225,6 +225,10 @@ namespace XUnitAndroid
             //Assert
             Assert.True(result);
         }
+        /// <summary>
+        /// Test that tests what happens when there is no reply from the backend (api)
+        /// error handling and expects a bool "false". 
+        /// </summary>
         [Fact]
         public void No_Reply_Api_NewPassword()
         {
@@ -235,6 +239,10 @@ namespace XUnitAndroid
             //Assert
             Assert.False(result);
         }
+        /// <summary>
+        /// Test that tests whether the ResetPasswordCommand can execute
+        /// when the user requests a new password in that viewmodel.
+        /// </summary>
         [Fact]
         public void Can_Execute_ResetPasswordCommand()
         {
