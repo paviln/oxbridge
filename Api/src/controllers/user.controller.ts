@@ -3,8 +3,8 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { getJwtSecret } from '../config/config';
 import User, { IUser } from '../models/user';
-import EmailForgotPassword from '../email/email.forgotPassword';
-import {NotFound} from 'express-http-custom-error';
+import { sendPassword } from '../services/emailService';
+import { NotFound } from 'express-http-custom-error';
 
 // Retrieve and return all users from the database.
 const findAll = (req: Request, res: Response) => {
@@ -67,7 +67,6 @@ const registerAdmin = (req: Request, res: Response) => {
     User.find({ emailUsername: req.body.emailUsername }, function (err, users) {
         if (err)
             return res.status(500).send({ message: err.message || "Some error occurred while retriving users" });
-        console.log(users);
         if (users.length > 0)
             return res.status(409).send({ message: "User with that username already exists" });
 
@@ -87,9 +86,6 @@ const registerAdmin = (req: Request, res: Response) => {
 
 // Register a new user and return token
 const register = (req: Request, res: Response) => {
-
-
-    console.log(req.body.emailUsername);
     // Checking that no user with that username exists
     User.findOne({ emailUsername: req.body.emailUsername }, null, null, function (err, user) {
         if (err)
@@ -145,7 +141,7 @@ const forgotPassword = async (req: Request, res: Response) => {
     if(!user) throw new NotFound("user not found"); //N(404)
 
     user.password = '1234';
-    new EmailForgotPassword(user.emailUsername, user.password);
+    sendPassword(user.emailUsername);
     await user.save();
 
     res.status(200).send(); //Y (200)

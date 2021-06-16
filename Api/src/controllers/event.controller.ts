@@ -7,7 +7,6 @@ import RacePoint from '../models/racePoint';
 
 // Create and Save a new Event
 const create = (req: Request, res: Response) => {
-  console.log(req.body);
   var event = new Event(req.body);
 
   // Finding next eventId
@@ -18,7 +17,6 @@ const create = (req: Request, res: Response) => {
       event.eventId = lastEvent.eventId + 1;
     else
       event.eventId = 1;
-    //  console.log(req.body);
     // Saving the new Event in the DB
     event.save(function (err) {
       if (err)

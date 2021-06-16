@@ -1,10 +1,10 @@
 import EventRegistration, { IEventRegistration } from '../models/eventRegistration';
 import Ship, { IShip } from '../models/ship';
 import Event, { IEvent } from '../models/event';
-import User, { IUser } from '../models/user';
-
+import User from '../models/user';
 import { Request, Response } from 'express';
-import EmailConfirmation from '../email/email.confirmation';
+import { emailConfirmation } from '../services/emailService';
+
 var bcrypt = require('bcryptjs');
 
 // Create and Save a new EventRegistration
@@ -107,7 +107,8 @@ const signUp = (req: Request, res: Response) => {
             if (err)
               return err;            
            
-            new EmailConfirmation(registration.shipId, event.eventId);
+            emailConfirmation(registration.shipId, event.eventId);
+
             return res.status(201).json(registration);
           });
         }
@@ -219,8 +220,9 @@ const addParticipant = (req: Request, res: Response) => {
         createRegistration(newEventRegistration, res, function (err: any, registration: IEventRegistration) {
           if (err)
             return err;
-          console.log(ship.shipId);
-          new EmailConfirmation(ship.shipId, req.body.eventId);
+
+          emailConfirmation(ship.shipId, req.body.eventId);
+
           return res.status(201).json(registration);
         });
       }

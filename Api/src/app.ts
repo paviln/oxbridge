@@ -1,15 +1,13 @@
 import { Express, Request, Response, NextFunction } from 'express';
 import 'express-async-errors';
 import {errorHandler} from 'express-http-custom-error';
-import bodyParser from 'body-parser';
 import cors from 'cors';
 import helmet from 'helmet';
 import mongoose from 'mongoose';
 import routes from './routes';
 import dotenv from 'dotenv';
 import * as cron from 'node-cron';
-import {SendEventReminder} from './services/eventService';
-import { Modules } from 'azure-iothub/dist/pl/operations';
+import {sendEventReminder} from './services/eventService';
 const express = require('express');
 
 const app = express();
@@ -28,25 +26,24 @@ app.use(express.urlencoded(options));
 
 app.use(helmet());
 
-
 app.use(express.static('public'));
 
 mongoose.set('useUnifiedTopology', true);
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 
-//  MAKE DB CONNECTION
+// MAKE DB CONNECTION
 mongoose.connect('mongodb://localhost:27017/OxbridgeDB');
 
-//  ROUTING
+// ROUTING
 app.use('/api', routes);
 
-//Run every 5 ish sec */10 0 0 * * *
-cron.schedule('0 0 0 * * *', () => {
-  SendEventReminder();
+// Run every 5 ish sec */10 0 0 * * *
+cron.schedule('*/10 0 0 * * *', () => {
+  sendEventReminder();
 });
 
-//  SERVER START
+// SERVER START
 app.listen(process.env.PORT || 3000, () => {
   console.log('We are now listening on port 3000 (serverside)');
 });
