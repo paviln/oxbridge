@@ -8,7 +8,7 @@ import { ShipService } from '../../services/ship.service';
 import { UserService } from '../../services/user.service';
 import { AppComponent } from '../../app.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MustMatch } from '../../helpers/must-match.validator';
+
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
@@ -40,11 +40,9 @@ export class ProfileComponent implements OnInit {
       firstname: ['', [Validators.required, this.user.firstname]],
       lastname: ['', [Validators.required, this.user.lastname]],
       password: ['', [Validators.required, this.user.password]]
-    },{
-      validator: MustMatch('password', 'confirmPassword')
-    });
+    }
       
-  }
+    )};
   // convenience getter for easy access to form fields
   get f() { return this.form.controls; }
 

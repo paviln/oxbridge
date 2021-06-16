@@ -21,7 +21,7 @@
                     <div class="col-xsm">
                         <input type="text" [(ngModel)]="user.firstname" formControlName="firstName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" />
                         <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
-                            <div *ngIf="f.firstName.errors.required">First Name is required</div>
+                            <div *ngIf="f.firstName.errors.required">Mangler fornavn</div>
                         </div>
                     </div>
                     <div>
@@ -35,19 +35,17 @@
                 
                 <div class="form-row">
                     <div class="form-group col">
-                        <label>Password</label>
-                        <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+                        
+                        <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" placeholder="Gammelt kodeord" />
                         <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-                            <div *ngIf="f.password.errors.required">Password is required</div>
-                            <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
+                            <div *ngIf="f.password.errors.required">Mangler Kodeord</div>
                         </div>
                     </div>
                     <div class="form-group col">
-                        <label>Confirm Password</label>
-                        <input type="password" formControlName="confirmPassword" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" />
-                        <div *ngIf="submitted && f.confirmPassword.errors" class="invalid-feedback">
-                            <div *ngIf="f.confirmPassword.errors.required">Confirm Password is required</div>
-                            <div *ngIf="f.confirmPassword.errors.mustMatch">Passwords must match</div>
+                        
+                        <input type="password" formControlName="newPassword" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.newPassword.errors }" placeholder="Nyt kodeord"/>
+                        <div *ngIf="submitted && f.newPassword.errors" class="invalid-feedback">
+                            <div *ngIf="f.newPassword.errors.required">Nyt kodeord mangler</div>                            
                         </div>
                     </div>
                 </div>  
