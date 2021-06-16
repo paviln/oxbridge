@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Oxbridge.App.Data;
 using Oxbridge.App.Models;
 using Oxbridge.App.Services;
+using Oxbridge.App.ViewModels;
 using Xunit;
 
 namespace XUnitAndroid
@@ -14,7 +15,7 @@ namespace XUnitAndroid
         private ServerClient serverClient;
 
         private DataController dataController;
-
+        private LoginViewModel viewModel;
         private const int testEventRegId = 2;
 
         private const double testLongtitude = 10.038299;
@@ -28,6 +29,7 @@ namespace XUnitAndroid
 
         public XUnitTest()
         {
+            viewModel = new LoginViewModel();
             serverClient = new ServerClient();
             dataController = new DataController();
         }
@@ -108,12 +110,140 @@ namespace XUnitAndroid
             }
         }
         /// <summary>
+        /// Tests if client can get images from the backend
+        /// </summary>
+        [Fact]
+        public void Get_Team_Image()
+        {
+            //Arrange
+            int _shipId = 1;
+
+            var _data = new Data()
+            {
+                data = new byte[0]
+            };
+            var _img = new Image()
+            {
+                Data = _data
+            };
+            var expected = _img;
+            //Act
+            var actual = serverClient.GetImage(_shipId).Result;
+            //Assert
+            Assert.Equal(expected, actual);
+
+        }
+        /// <summary>
+        /// Tests if serverClient returns false whenever the shipId does not exist. 
+        /// </summary>
+        [Fact]
+        public void Test_Get_Image_Fail()
+        {
+            //Arrange
+            int _shipId = 100;
+
+            var _data = new Data()
+            {
+                data = new byte[0]
+            };
+            var _img = new Image()
+            {
+                Data = _data
+            };
+            var expected = _img;
+            //Act
+            var actual = serverClient.GetImage(_shipId).Result;
+            //Assert
+            Assert.Equal(expected, actual);
+        }
+        /// <summary>
+        /// Tests if client can upload image to the backend
+        /// </summary>
+        [Fact]
+        public void Test_Upload_Image()
+        {
+            //Arrange
+            int _shipId = 1;
+            var data = new Data
+            {
+                data = new byte[0]
+            };
+            var _img = new Image
+            {
+                Data = data
+            };
+
+            //Act         
+            var result = serverClient.UploadImage(_shipId, _img).Result;
+            //Assert
+            Assert.True(result);
+        }
+        /// <summary>
+        /// Tests if the serverClient returns false whenever the shipId does not exist. 
+        /// </summary>
+        [Fact]
+        public void Test_Upload_Image_Fail()
+        {
+            //Arrange
+            int _shipId = 100;
+            var data = new Data
+            {
+                data = new byte[0]
+            };
+            var _img = new Image
+            {
+                Data = data
+            };
+            //Act         
+            var result = serverClient.UploadImage(_shipId, _img).Result;
+            //Assert
+            Assert.True(result);
+        }
+        /// <summary>
+        /// Tests if client can get admin broadcasts on an event from the backend
+        /// </summary>
+        [Fact]
+        public void GetEventBroadcast()
+        {
+            //Arrange
+
+            //Act
+
+            //Assert
+
+        }
+        /// <summary>
         /// Tests if a ResetPassword can be posted to the backend
         /// </summary>
         [Fact]
-        public void TestResetPassword()
+        public void NewPassword()
         {
-            
+            //Arrange
+            string email = "paviln@outlook.dk";
+            //Act
+            var result = serverClient.ResetPassword(email).Result;
+            //Assert
+            Assert.True(result);
+        }
+        [Fact]
+        public void No_Reply_Api_NewPassword()
+        {
+            //Arrange
+            string email = "paviln@outlook.dk";
+            //Act
+            var result = serverClient.ResetPassword(email).Result;
+            //Assert
+            Assert.False(result);
+        }
+        [Fact]
+        public void Can_Execute_ResetPasswordCommand()
+        {
+            //Arrange
+            viewModel = new LoginViewModel();
+            //Act
+            var result = viewModel.ResetPasswordCommand.CanExecute(null);
+            //Assert
+            Assert.True(result);
         }
     }
 }

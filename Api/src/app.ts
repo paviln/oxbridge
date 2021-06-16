@@ -9,6 +9,7 @@ import routes from './routes';
 import dotenv from 'dotenv';
 import * as cron from 'node-cron';
 import {SendEventReminder} from './services/eventService';
+import { Modules } from 'azure-iothub/dist/pl/operations';
 const express = require('express');
 
 const app = express();
