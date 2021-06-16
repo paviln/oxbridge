@@ -191,7 +191,9 @@ namespace Oxbridge.App.ViewModels.Popups
 
             }
         }
-
+        /****************************************************************
+        //Method for taking a photo and posts it to the api
+        */
         private async Task TakePhotoAsync()
         {
             try
