@@ -210,7 +210,7 @@ namespace Oxbridge.App.ViewModels.Popups
                 {
                     Data = data
                 };
-                await serverClient.UploadImage(SelectedShip.ShipId, img);
+                await serverClient.UploadImage(1, img);
             }
             catch (Exception ex)
             {
